@@ -36,6 +36,7 @@ parser.add_argument('--test_interval', type=float, required=True)
 parser.add_argument('--n_class', type=int, required=True)
 parser.add_argument('--num_workers', type=int, required=True)
 parser.add_argument('--max_epoch', type=int, required=True)
+parser.add_argument('--test', type=str2bool, required=True)
 
 # load opts
 parser.add_argument('--weights', type=str, required=False, default=None)
@@ -165,7 +166,9 @@ def AdjustLR(optimizer):
     for param_group in optimizer.param_groups:
         param_group['lr'] = param_group['lr'] * 0.5
 
-def train():        
+def train():            
+    
+    
     
     dataset = Dataset('train', args)
     print('Start Training, Data Length:',len(dataset))
@@ -272,4 +275,8 @@ def train():
         scheduler.step()            
         
 if(__name__ == '__main__'):
+    if(args.test):
+        acc, msg = test()
+        print(f'acc={acc}')
+        exit()
     train()

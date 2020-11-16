@@ -20,8 +20,18 @@ This is the repository of [Learn an Effective Lip Reading Model without Pains]()
 
 |      Method          |   LRW  |     LRW-1000    |
 |:--------------------:|:------:|:---------------:|
-|    ResNet18 + BiGRU  |   83.7%   |     46.5%    |
-|    Ours              |  88.4%    |     55.7%    |
+|[Chung et al.](https://www.robots.ox.ac.uk/~vgg/publications/2017/Chung17a/chung17a.pdf)   | 61.1%  | 25.7% |
+|[Stafylakis et al.](https://arxiv.org/abs/1703.04105)   |83.5% | 38.2% |
+|[Stafylakis et al. (With Word Boundary)](https://arxiv.org/abs/1811.01194)   |88.8% | - |
+|[Wang et al.](https://bmvc2019.org/wp-content/uploads/papers/1211-paper.pdf)   |83.3% | 36.9% |
+|[Weng et al.](https://arxiv.org/abs/1905.02540)   |84.1% | - |
+|[Luo et al.](https://arxiv.org/abs/2003.03983)   | 83.5% | 38.7% |
+|[Zhao et al.](https://arxiv.org/abs/2003.06439)   |84.4% | 38.7% |
+|[Zhang et al.](https://arxiv.org/abs/2003.03206)   |85.0% | 45.2% |
+|[Martinez et al.](https://arxiv.org/abs/2001.08702)   |85.3% | 41.4% |
+|[Martinez et al.](https://arxiv.org/abs/2007.06504)   |87.7% |43.2%|
+|    ResNet18 + BiGRU (Ours)  |   83.7%   |     46.5%    |
+|    Our Method  |  88.4%    |     55.7%    |
 
 
 

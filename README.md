@@ -140,7 +140,7 @@ Optional arguments:
 - `label_smooth`: use label_smooth in tranining
 - `se`: use se module in ResNet-18
 
-More training details and setting can be found in [our paper](). We plan to include more models in the future.
+More training details and setting can be found in [our paper](). We plan to include more pretrained models in the future.
 
 # Dependencies
 

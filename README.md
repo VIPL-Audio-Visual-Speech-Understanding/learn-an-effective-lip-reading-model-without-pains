@@ -8,6 +8,7 @@
 - [Dataset Preparation](#Dataset-Preparation)
 - [How to test](#How-to-test)
 - [How to train](#How-to-train)
+- [Dependencies](#Dependencies)
 - [Citation](#Citation)
 - [License](#License)
 
@@ -37,7 +38,7 @@ This is the repository of [Learn an Effective Lip Reading Model without Pains]()
 
 ## Dataset Preparation
 
-1. Download  [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.htm) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14) and place `lrw_mp4` and 'LRW1000_Public' in the root of this repository. 
+1. Download  [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.htm) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14) and place `lrw_mp4` and `LRW1000_Public` in the root of this repository. 
 
 2. You can run the  `scripts/prepare_lrw.py` and `scripts/prepare_lrw1000.py` to generate training samples of LRW and LRW-1000 Dataset respectively:
 
@@ -56,7 +57,7 @@ Baidu Yun: <https://pan.baidu.com/s/1TgRn37l3X611v9c2nf4YBg> (code: ufsc)
 
 If you can not access to Baidu Yun, please email dalu.feng@vipl.ict.ac.cn or fengdalu@gmail.com
 
-To test our provided weights, you should download weights and place them in the root of this repository. We plan to include more models in the future.
+To test our provided weights, you should download weights and place them in the root of this repository. 
 
 For example, to test baseline on LRW Dataset: 
 
@@ -139,7 +140,12 @@ Optional arguments:
 - `label_smooth`: use label_smooth in tranining
 - `se`: use se module in ResNet-18
 
-More training details and setting can be found in [our paper]().
+More training details and setting can be found in [our paper](). We plan to include more models in the future.
+
+# Dependencies
+
+- PyTorch 1.6
+- opencv-python
 
 ## Citation
 

@@ -52,7 +52,9 @@ The mouth videos will be saved in the `.pkl` format
 
 Link of pretrained weights:
 
-Baidu Yun:
+Baidu Yun: <https://pan.baidu.com/s/1TgRn37l3X611v9c2nf4YBg> (code: ufsc)
+
+If you can not access to Baidu Yun, please email dalu.feng@vipl.ict.ac.cn or fengdalu@gmail.com
 
 To test our provided weights, you should download weights and place them in the root of this repository. We plan to include more models in the future.
 
@@ -127,7 +129,7 @@ Optional arguments:
 - `batch_size`: batch size
 - `num_workers`: the number of processes used for data loading
 - `max_epoch`: the maximum epochs in training
-- `test_interval`: the number of epochs between testing, notice this number can be set lower than 1.0. (for example 0.5, 0.25, etc.)
+- `test_interval`: the number of epochs between testing, notice this number can be set lower than 1.0. (e.g. 0.5, 0.25, etc.)
 - `test`: test mode
 - `save_prefix`: the save prefix of pre-trained weights
 - `n_class`: the number of total word classes

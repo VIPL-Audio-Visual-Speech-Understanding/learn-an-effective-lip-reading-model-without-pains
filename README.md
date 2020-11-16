@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is the repository of [Learn an Effective Lip Reading Model without Pains](). In this repository, we provide pre-trained models and training settings for deep lip reading. We train our model on [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.htm) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14). We obtain 88.4% 55.7% on LRW and LRW-1000, respectively. The results are comparable and even surpass current state-of-the-art results.
+This is the repository of [Learn an Effective Lip Reading Model without Pains](). In this repository, we provide pre-trained models and training settings for deep lip reading. We train our model on [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.htm) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14). We obtain **88.4%** and **55.7%** on LRW and LRW-1000, respectively. The results are comparable and even surpass current state-of-the-art results.
 
 ## Results
 
@@ -16,7 +16,7 @@ This is the repository of [Learn an Effective Lip Reading Model without Pains]()
 
 ```
 python scripts/prepare_lrw.py
-scripts/prepare_lrw1000.py 
+python scripts/prepare_lrw1000.py 
 ```
 
 ## Testing

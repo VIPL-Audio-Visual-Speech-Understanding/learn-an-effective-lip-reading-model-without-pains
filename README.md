@@ -5,9 +5,9 @@
 
 - [Introduction](#Introduction)
 - [Benchmark](#Benchmark)
-- [Dataset Preparation](#Dataset Preparation)
-- [How to test](#How to test)
-- [How to train](#How to train)
+- [Dataset Preparation](#Dataset-Preparation)
+- [How to test](#How-to-test)
+- [How to train](#How-to-train)
 - [Citation](#Citation)
 - [License](#License)
 

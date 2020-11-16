@@ -137,7 +137,7 @@ Optional arguments:
 - `dataset`: the dataset used for training and testing, only `lrw` and `lrw1000` are supported.
 - `border`:  use word boundary indicated variable for training and testing
 - `mixup`: use mixup in training
-- `label_smooth`: use label_smooth in tranining
+- `label_smooth`: use label_smooth in training
 - `se`: use se module in ResNet-18
 
 More training details and setting can be found in [our paper](). We plan to include more pretrained models in the future.

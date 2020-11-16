@@ -14,7 +14,7 @@
 
 ## Introduction
 
-This is the repository of [Learn an Effective Lip Reading Model without Pains](). In this repository, we provide pre-trained models and training settings for deep lip reading. We train our model on [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14). We obtain **88.4%** and **55.7%** on LRW and LRW-1000, respectively. The results are comparable and even surpass current state-of-the-art results.
+This is the repository of [Learn an Effective Lip Reading Model without Pains](). In this repository, we provide pre-trained models and training settings for deep lip reading. We train our model on [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14). We obtain **88.4%** and **55.7%** on LRW and LRW-1000, respectively. The results are comparable and even surpass current state-of-the-art results. Especially, we reach the current state-of-the-art result (55.7%) on LRW-1000 Dataset.
 
 ## Benchmark
 
@@ -29,9 +29,9 @@ This is the repository of [Learn an Effective Lip Reading Model without Pains]()
 |2020|[Zhao et al.](https://arxiv.org/abs/2003.06439)   |84.4% | 38.7% |
 |2020|[Zhang et al.](https://arxiv.org/abs/2003.03206)   |85.0% | 45.2% |
 |2020|[Martinez et al.](https://arxiv.org/abs/2001.08702)   |85.3% | 41.4% |
-|2020|[Martinez et al.](https://arxiv.org/abs/2007.06504)   |87.7% |43.2%|
-|2020|    **ResNet18 + BiGRU (Ours)**  |   83.7%   |     46.5%    |
-|2020|    **Our Method**  |  88.4%    |     **55.7%**    |
+|2020|[Ma et al.](https://arxiv.org/abs/2007.06504)   |87.7% |43.2%|
+|**2020**|    **ResNet18 + BiGRU (Ours)**  |   83.7%   |     46.5%    |
+|**2020**|    **Our Method**  |  88.4%    |     **55.7%**    |
 
 
 

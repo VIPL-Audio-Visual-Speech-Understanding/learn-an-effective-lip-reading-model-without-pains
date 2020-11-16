@@ -1,5 +1,17 @@
 # Learn an Effective Lip Reading Model without Pains
 
+
+## Content
+
+[Introduction](#Introduction)
+[Benchmark](#Benchmark)
+[Dataset Preparation](#Dataset Preparation)
+[How to test](#How to test)
+[How to train](#How to train)
+[Citation](#Citation)
+[License](#License)
+
+
 ## Introduction
 
 This is the repository of [Learn an Effective Lip Reading Model without Pains](). In this repository, we provide pre-trained models and training settings for deep lip reading. We train our model on [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14). We obtain **88.4%** and **55.7%** on LRW and LRW-1000, respectively. The results are comparable and even surpass current state-of-the-art results.
@@ -26,7 +38,7 @@ python scripts/prepare_lrw1000.py
 
 The mouth videos will be saved in the `.pkl` format
 
-## Testing
+## How to test
 
 Link of pretrained weights:
 
@@ -76,7 +88,7 @@ python main_visual.py \
     --weights='checkpoints/lrw1000-border-se-mixup-label-smooth-cosine-lr-wd-1e-4-acc-0.5578.pt'
 ```
 
-## Training
+## How to train
 
 For example, to train lrw baseline:
 
@@ -100,7 +112,7 @@ python main_visual.py \
 
 Optional arguments:
 
-- `--gpus`: the GPU id used for training
+- `gpus`: the GPU id used for training
 - `lr`: learning rate
 - `batch_size`: batch size
 - `num_workers`: the number of processes used for data loading
@@ -114,6 +126,8 @@ Optional arguments:
 - `mixup`: use mixup in training
 - `label_smooth`: use label_smooth in tranining
 - `se`: use se module in ResNet-18
+
+More training details and setting can be found in [our paper]().
 
 ## Citation
 

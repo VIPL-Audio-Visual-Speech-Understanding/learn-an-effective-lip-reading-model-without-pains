@@ -35,7 +35,8 @@ This is the repository of [Learn an Effective Lip Reading Model without Pains](h
 |2020|[Martinez et al.](https://arxiv.org/abs/2001.08702)   |85.3% | 41.4% |
 |2020|[Ma et al.](https://arxiv.org/abs/2007.06504)   |87.7% |43.2%|
 |**2020**|    **ResNet18 + BiGRU (Ours)**  |   83.7%   |     46.5%    |
-|**2020**|    **Our Method**  |  88.4%    |     **55.7%**    |
+|**2020**|    **Our Method**  |   85.0%   |     48.0%    |
+|**2020**|    **Our Method (with word boundary)**  |  88.4%    |     **55.7%**    |
 
 
 

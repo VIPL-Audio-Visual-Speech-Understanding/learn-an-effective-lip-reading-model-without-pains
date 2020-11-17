@@ -153,7 +153,7 @@ If you find this code useful in your research, please consider to cite the follo
 
 ```
 @article{ma2020towards,
-  author       = "Feng, Dalu Yang, Shuang and Shan, Shiguang and Chen, Xilin",
+  author       = "Feng, Dalu and Yang, Shuang and Shan, Shiguang and Chen, Xilin",
   title        = "Learn an Effective Lip Reading Model without Pains",
   journal      = "arXiv preprint arXiv:2011.07557",
   year         = "2020",

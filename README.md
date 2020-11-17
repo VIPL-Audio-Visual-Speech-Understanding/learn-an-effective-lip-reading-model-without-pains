@@ -1,7 +1,6 @@
 # Learn an Effective Lip Reading Model without Pains
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/learn-an-effective-lip-reading-model-without/lipreading-on-lrw-1000)](https://paperswithcode.com/sota/lipreading-on-lrw-1000?p=learn-an-effective-lip-reading-model-without)
-
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/learn-an-effective-lip-reading-model-without/lipreading-on-lip-reading-in-the-wild)](https://paperswithcode.com/sota/lipreading-on-lip-reading-in-the-wild?p=learn-an-effective-lip-reading-model-without)
 
 

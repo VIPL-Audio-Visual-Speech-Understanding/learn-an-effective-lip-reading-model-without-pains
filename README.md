@@ -56,7 +56,7 @@ The mouth videos will be saved in the `.pkl` format
 ## How to test
 
 Link of pretrained weights:
-[Baidu Yun](https://pan.baidu.com/s/1TgRn37l3X611v9c2nf4YBg)(code: ufsc), [Google Drive](https://drive.google.com/drive/folders/115bAZXOZqsBJWvX28HjXRwEhNJzJlq88?usp=sharing)
+[Baidu Yun](https://pan.baidu.com/s/1mkKPmW2ezuctyoHwPNUkog)(code: 1hpa), [Google Drive](https://drive.google.com/drive/folders/115bAZXOZqsBJWvX28HjXRwEhNJzJlq88?usp=sharing)
 
 If you can not access to Baidu Yun, please email dalu.feng@vipl.ict.ac.cn or fengdalu@gmail.com
 

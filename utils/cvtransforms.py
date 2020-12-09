@@ -38,5 +38,5 @@ def RandomCrop(batch_img, size):
 
 def HorizontalFlip(batch_img):
     if random.random() > 0.5:
-        batch_img = cv2.flip(batch_img, 2)
+        batch_img = np.ascontiguousarray(batch_img[:,:,::-1])
     return batch_img

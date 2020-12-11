@@ -18,7 +18,7 @@
 
 ## Introduction
 
-This is the repository of [Learn an Effective Lip Reading Model without Pains](https://arxiv.org/abs/2011.07557). In this repository, we provide pre-trained models and training settings for deep lip reading. We evaluate our pipeline on [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14). We obtain **88.4%** and **55.7%** on LRW and LRW-1000, respectively. The results are comparable and even surpass current state-of-the-art results. **Especially, we reach the current state-of-the-art result (55.7%) on LRW-1000 Dataset.** Noted this repository achieves higher performance than [our paper](https://arxiv.org/abs/2011.07557) by fixing some minor implementation errors. (such as total training epochs, horizontal flip, and so on)
+This is the repository of [Learn an Effective Lip Reading Model without Pains](https://arxiv.org/abs/2011.07557). In this repository, we provide pre-trained models and training settings for deep lip reading. We evaluate our pipeline on [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14). We obtain **88.4%** and **55.7%** on LRW and LRW-1000, respectively. The results are comparable and even surpass current state-of-the-art results. **Especially, we reach the current state-of-the-art result (55.7%) on LRW-1000 Dataset.** Noted this repository achieves higher performance than our [paper](https://arxiv.org/abs/2011.07557) by fixing some minor implementation errors. (such as total training epochs, horizontal flip, and so on)
 
 ## Benchmark
 

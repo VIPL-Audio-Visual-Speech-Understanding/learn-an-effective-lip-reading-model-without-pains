@@ -27,9 +27,9 @@ This is the repository of [Learn an Effective Lip Reading Model without Pains](h
 |2017|[Chung et al.](https://www.robots.ox.ac.uk/~vgg/publications/2017/Chung17a/chung17a.pdf)   | 61.1%  | - |
 |2017|[Stafylakis et al.](https://arxiv.org/abs/1703.04105)   |83.5% | - |
 |2018|[Stafylakis et al.](https://arxiv.org/abs/1811.01194)   |**88.8%** | - |
-|2019|[Yang et at.(VGGM-LSTM)](https://arxiv.org/abs/1810.06990) | - | 25.76% |
-|2019|[Yang et at.(DenseNet-3D)](https://arxiv.org/abs/1810.06990) | - | 34.76% |
-|2019|[Yang et at.(ResNet18-GRU)](https://arxiv.org/abs/1810.06990) | - | 38.19% |
+|2019|[Yang et at. (VGGM-LSTM)](https://arxiv.org/abs/1810.06990) | - | 25.76% |
+|2019|[Yang et at. (DenseNet-3D)](https://arxiv.org/abs/1810.06990) | - | 34.76% |
+|2019|[Yang et at. (ResNet18-GRU)](https://arxiv.org/abs/1810.06990) | - | 38.19% |
 |2019|[Wang et al.](https://bmvc2019.org/wp-content/uploads/papers/1211-paper.pdf)   |83.3% | 36.9% |
 |2019|[Weng et al.](https://arxiv.org/abs/1905.02540)   |84.1% | - |
 |2020|[Luo et al.](https://arxiv.org/abs/2003.03983)   | 83.5% | 38.7% |

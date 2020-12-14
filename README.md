@@ -26,7 +26,7 @@ This is the repository of [Learn an Effective Lip Reading Model without Pains](h
 |:----:|:--------------------:|:------:|:---------------:|
 |2017|[Chung et al.](https://www.robots.ox.ac.uk/~vgg/publications/2017/Chung17a/chung17a.pdf)   | 61.1%  | - |
 |2017|[Stafylakis et al.](https://arxiv.org/abs/1703.04105)   |83.5% | - |
-|2018|[Stafylakis et al.](https://arxiv.org/abs/1811.01194)   |**88.8%** | - |
+|2018|[Stafylakis et al. (with word boundary)](https://arxiv.org/abs/1811.01194)   |**88.8%** | - |
 |2019|[Yang et at. (VGGM-LSTM)](https://arxiv.org/abs/1810.06990) | - | 25.76% |
 |2019|[Yang et at. (DenseNet-3D)](https://arxiv.org/abs/1810.06990) | - | 34.76% |
 |2019|[Yang et at. (ResNet18-GRU)](https://arxiv.org/abs/1810.06990) | - | 38.19% |

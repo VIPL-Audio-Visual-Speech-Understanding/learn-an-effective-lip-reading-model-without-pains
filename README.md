@@ -57,13 +57,13 @@ python scripts/prepare_lrw.py
 python scripts/prepare_lrw1000.py 
 ```
 
-The mouth videos, labels, and word boundary information will be saved in the `.pkl` format. We pack image sequence as `jpeg` format into our `.pkl` files and decoding via (PyTurboJPEG)[https://github.com/lilohuang/PyTurboJPEG]. You may need to modify the `utils/dataset.py` file when training your own dataset.
+The mouth videos, labels, and word boundary information will be saved in the `.pkl` format. We pack image sequence as `jpeg` format into our `.pkl` files and decoding via [PyTurboJPEG](https://github.com/lilohuang/PyTurboJPEG). You may need to modify the `utils/dataset.py` file when training your own dataset.
 
 ## How to test
 
 Link of pretrained weights:
 
-Baidu Yun: <https://pan.baidu.com/s/1-bLDBdlAkcpQP7-6942rag> (code: 26qn), Google Drive: <https://drive.google.com/drive/folders/13qSCBRvlsw7aof3EfQdRGuPbnV4ljrp4?usp=sharing>
+[Baidu Yun](https://pan.baidu.com/s/1-bLDBdlAkcpQP7-6942rag) (code: 26qn), [Google Drive](https://drive.google.com/drive/folders/13qSCBRvlsw7aof3EfQdRGuPbnV4ljrp4?usp=sharing)
 
 If you can not access to Baidu Yun, please email dalu.feng@vipl.ict.ac.cn or fengdalu@gmail.com
 
@@ -156,7 +156,7 @@ More training details and setting can be found in [our paper](https://arxiv.org/
 
 - PyTorch 1.6
 - opencv-python
-- TurboJPEG and (PyTurboJPEG)[https://github.com/lilohuang/PyTurboJPEG]
+- TurboJPEG and [PyTurboJPEG](https://github.com/lilohuang/PyTurboJPEG)
 
 ## Citation
 

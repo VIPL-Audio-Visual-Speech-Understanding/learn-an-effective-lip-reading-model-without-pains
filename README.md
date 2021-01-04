@@ -27,6 +27,7 @@ This is the repository of [Learn an Effective Lip Reading Model without Pains](h
 |2017|[Chung et al.](https://www.robots.ox.ac.uk/~vgg/publications/2017/Chung17a/chung17a.pdf)   | 61.1%  | 25.7% |
 |2017|[Stafylakis et al.](https://arxiv.org/abs/1703.04105)   |83.5% | 38.2% |
 |2018|[Stafylakis et al.](https://arxiv.org/abs/1811.01194)   |**88.8%** | - |
+|2019|[Yang et at.](https://arxiv.org/abs/1810.06990) | - | 38.19% |
 |2019|[Wang et al.](https://bmvc2019.org/wp-content/uploads/papers/1211-paper.pdf)   |83.3% | 36.9% |
 |2019|[Weng et al.](https://arxiv.org/abs/1905.02540)   |84.1% | - |
 |2020|[Luo et al.](https://arxiv.org/abs/2003.03983)   | 83.5% | 38.7% |
@@ -61,11 +62,9 @@ The mouth videos, labels, and word boundary information will be saved in the `.p
 
 ## How to test
 
-Link of pretrained weights:
+Link of pretrained weights: [Baidu Yun](https://pan.baidu.com/s/1-bLDBdlAkcpQP7-6942rag) (code: 26qn), [Google Drive](https://drive.google.com/drive/folders/13qSCBRvlsw7aof3EfQdRGuPbnV4ljrp4?usp=sharing)
 
-[Baidu Yun](https://pan.baidu.com/s/1-bLDBdlAkcpQP7-6942rag) (code: 26qn), [Google Drive](https://drive.google.com/drive/folders/13qSCBRvlsw7aof3EfQdRGuPbnV4ljrp4?usp=sharing)
-
-If you can not access to Baidu Yun, please email dalu.feng@vipl.ict.ac.cn or fengdalu@gmail.com
+If you can not access to provided links, please email dalu.feng@vipl.ict.ac.cn or fengdalu@gmail.com.
 
 To test our provided weights, you should download weights and place them in the root of this repository. 
 

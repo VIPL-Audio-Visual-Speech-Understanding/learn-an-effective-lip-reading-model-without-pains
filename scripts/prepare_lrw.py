@@ -1,4 +1,8 @@
 # encoding: utf-8
+import cv2
+from turbojpeg import TurboJPEG, TJPF_GRAY, TJSAMP_GRAY, TJFLAG_PROGRESSIVE
+import torch
+
 import numpy as np
 import glob
 import time
@@ -7,24 +11,23 @@ import os
 from torch.utils.data import Dataset, DataLoader
 import torch
 
-
+jpeg = TurboJPEG()
 def extract_opencv(filename):
     video = []
     cap = cv2.VideoCapture(filename)
     while(cap.isOpened()):
         ret, frame = cap.read() # BGR
         if ret:
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)                    
+            frame = frame[115:211, 79:175]
+            frame = jpeg.encode(frame)
             video.append(frame)
         else:
             break
     cap.release()
-    video = np.array(video)
-    video = video[:, 115:211, 79:175]
-    return video
+    return video        
 
 
-target_dir = 'lrw_roi_80_116_175_211_npy_gray_pkl'
+target_dir = 'lrw_roi_80_116_175_211_npy_gray_pkl_jpeg'
 
 if(not os.path.exists(target_dir)):
     os.makedirs(target_dir)    
@@ -53,7 +56,7 @@ class LRWDataset(Dataset):
         
     def __getitem__(self, idx):
             
-        inputs = extract_opencv(self.list[idx][0]).astype(np.uint8)
+        inputs = extract_opencv(self.list[idx][0])
         result = {}        
          
         name = self.list[idx][0]
@@ -89,7 +92,7 @@ class LRWDataset(Dataset):
 if(__name__ == '__main__'):
     loader = DataLoader(LRWDataset(),
             batch_size = 96, 
-            num_workers = 8,   
+            num_workers = 16,   
             shuffle = False,         
             drop_last = False)
     

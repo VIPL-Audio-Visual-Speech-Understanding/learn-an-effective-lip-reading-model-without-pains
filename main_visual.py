@@ -8,13 +8,13 @@ import os
 import sys
 import numpy as np
 import time
-#from tensorboardX import SummaryWriter
 from model import *
 import torch.optim as optim 
 import random
 import pdb
 import shutil
 from LSR import LSR
+from torch.cuda.amp import autocast, GradScaler
 
 
 torch.backends.cudnn.benchmark = True
@@ -82,8 +82,9 @@ def load_missing(model, pretrained_dict):
     return model
     
 
-optim_video = optim.Adam(video_model.parameters(), lr = args.lr, weight_decay=1e-4)     
-scheduler = optim.lr_scheduler.CosineAnnealingLR(optim_video, T_max = args.max_epoch, eta_min=1e-6)
+lr = args.batch_size / 32.0 / torch.cuda.device_count() * args.lr
+optim_video = optim.Adam(video_model.parameters(), lr = lr, weight_decay=1e-4)     
+scheduler = optim.lr_scheduler.CosineAnnealingLR(optim_video, T_max = args.max_epoch, eta_min=5e-6)
 
 
 if(args.weights is not None):
@@ -136,10 +137,11 @@ def test():
             names = input.get('name')
             border = input.get('duration').cuda(non_blocking=True).float()
             
-            if(args.border):
-                y_v = video_model(video, border)                                           
-            else:
-                y_v = video_model(video)                                           
+            with autocast():
+                if(args.border):
+                    y_v = video_model(video, border)                                           
+                else:
+                    y_v = video_model(video)                                           
                                 
 
             v_acc.extend((y_v.argmax(-1) == label).cpu().numpy().tolist())
@@ -162,10 +164,6 @@ def showLR(optimizer):
         lr += ['{:.6f}'.format(param_group['lr'])]
     return ','.join(lr)
 
-def AdjustLR(optimizer):
-    for param_group in optimizer.param_groups:
-        param_group['lr'] = param_group['lr'] * 0.5
-
 def train():            
     
     
@@ -185,6 +183,7 @@ def train():
     adjust_lr_count = 0
     alpha = 0.2
     beta_distribution = torch.distributions.beta.Beta(alpha, alpha)
+    scaler = GradScaler()             
     for epoch in range(max_epoch):
         total = 0.0
         v_acc = 0.0
@@ -208,50 +207,49 @@ def train():
             else:
                 loss_fn = nn.CrossEntropyLoss()
             
-            if(args.mixup):
-                lambda_ = np.random.beta(alpha, alpha)
-                index = torch.randperm(video.size(0)).cuda(non_blocking=True)
-                
-                mix_video = lambda_ * video + (1 - lambda_) * video[index, :]
-                mix_border = lambda_ * border + (1 - lambda_) * border[index, :]
+            with autocast():
+                if(args.mixup):
+                    lambda_ = np.random.beta(alpha, alpha)
+                    index = torch.randperm(video.size(0)).cuda(non_blocking=True)
                     
-                label_a, label_b = label, label[index]            
+                    mix_video = lambda_ * video + (1 - lambda_) * video[index, :]
+                    mix_border = lambda_ * border + (1 - lambda_) * border[index, :]
+                        
+                    label_a, label_b = label, label[index]            
 
-                if(args.border):
-                    y_v = video_model(mix_video, mix_border)       
-                else:                
-                    y_v = video_model(mix_video)       
+                    if(args.border):
+                        y_v = video_model(mix_video, mix_border)       
+                    else:                
+                        y_v = video_model(mix_video)       
 
-                loss_bp = lambda_ * loss_fn(y_v, label_a) + (1 - lambda_) * loss_fn(y_v, label_b)
-                
-            else:
-                if(args.border):
-                    y_v = video_model(video, border)       
-                else:                
-                    y_v = video_model(video)    
+                    loss_bp = lambda_ * loss_fn(y_v, label_a) + (1 - lambda_) * loss_fn(y_v, label_b)
                     
-                loss_bp = loss_fn(y_v, label)
+                else:
+                    if(args.border):
+                        y_v = video_model(video, border)       
+                    else:                
+                        y_v = video_model(video)    
+                        
+                    loss_bp = loss_fn(y_v, label)
                                     
             
             loss['CE V'] = loss_bp
                 
-            optim_video.zero_grad()     
-            loss_bp.backward()            
-            optim_video.step()
+            optim_video.zero_grad()   
+            scaler.scale(loss_bp).backward()  
+            scaler.step(optim_video)
+            scaler.update()
             
             toc = time.time()
             
-            if(tot_iter % 10 == 0):
-                msg = 'epoch={},train_iter={},eta={:.5f}'.format(epoch, tot_iter, (toc-tic)*(len(loader)-i_iter)/3600.0)
-                for k, v in loss.items():                                                
-                    msg += ',{}={:.5f}'.format(k, v)
-                msg = msg + str(',lr=' + str(showLR(optim_video)))                    
-                msg = msg + str(',best_acc={:2f}'.format(best_acc))
-                print(msg)                    
+            msg = 'epoch={},train_iter={},eta={:.5f}'.format(epoch, tot_iter, (toc-tic)*(len(loader)-i_iter)/3600.0)
+            for k, v in loss.items():                                                
+                msg += ',{}={:.5f}'.format(k, v)
+            msg = msg + str(',lr=' + str(showLR(optim_video)))                    
+            msg = msg + str(',best_acc={:2f}'.format(best_acc))
+            print(msg)                                
             
-            
-            test_interval = int((len(loader) - 1) * args.test_interval)
-            if(tot_iter % test_interval == 0):
+            if(i_iter == len(loader) - 1 or (epoch == 0 and i_iter == 0)):
 
                 acc, msg = test()
 

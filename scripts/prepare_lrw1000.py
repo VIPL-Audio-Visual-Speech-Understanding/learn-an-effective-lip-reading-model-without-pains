@@ -8,8 +8,10 @@ import torch
 from collections import defaultdict
 import sys
 from torch.utils.data import DataLoader
+from turbojpeg import TurboJPEG, TJPF_GRAY, TJSAMP_GRAY, TJFLAG_PROGRESSIVE
 
 
+jpeg = TurboJPEG()
 class LRW1000_Dataset(Dataset):
     
     def __init__(self, index_file, target_dir):
@@ -76,28 +78,23 @@ class LRW1000_Dataset(Dataset):
         (path, mfcc, op, ed, label) = item
         inputs, border = self.load_images(os.path.join(self.data_root, path), op, ed)        
                 
-        result = {}
-        
+        result = {}        
                 
-        result['video'] = inputs.astype(np.uint8)
+        result['video'] = inputs
         result['label'] = int(label)        
         result['duration'] = border.astype(np.bool)
         
         savename = os.path.join(target_dir, f'{path}_{op}_{ed}.pkl')
         torch.save(result, savename)
         
-        return result
+        return True
 
     def __getitem__(self, idx):
 
-        r1 = self.load_video(self.data[idx])
+        r = self.load_video(self.data[idx])
 
-        if(len(self.unlabel_data) > 0 and self.phase == 'train'):
-            r2 = self.load_video(random.choice(self.unlabel_data))
-            r2 = {'unlabel_' + k: v for k, v in r2.items()}
-            r1.update(r2)        
 
-        return r1
+        return r
 
     def load_images(self, path, op, ed):
         center = (op + ed) / 2
@@ -113,24 +110,25 @@ class LRW1000_Dataset(Dataset):
         files =  [os.path.join(path, '{}.jpg'.format(i)) for i in range(op, ed)]
         files = filter(lambda path: os.path.exists(path), files)
         files = [cv2.imread(file) for file in files]
-        files = [cv2.cvtColor(file, cv2.COLOR_RGB2GRAY) for file in files]
         files = [cv2.resize(file, (96, 96)) for file in files]        
+        
         files = np.stack(files, 0)        
         t = files.shape[0]
-        files = files.reshape(t, 96, 96)        
         
-        tensor = np.zeros((40, 96, 96))
+        tensor = np.zeros((40, 96, 96, 3)).astype(files.dtype)
         border = np.zeros((40))
-        tensor[:t,...] = files
+        tensor[:t,...] = files.copy()
         border[left_border:right_border] = 1.0
-            
+        
+        tensor = [jpeg.encode(tensor[_]) for _ in range(40)]
+        
         return tensor, border
 
 
 if(__name__ == '__main__'):
     
     for subset in ['trn', 'val', 'tst']:
-        target_dir = f'LRW1000_Public_pkl_test/{subset}'
+        target_dir = f'LRW1000_Public_pkl_jpeg/{subset}'
         index_file =  f'LRW1000_Public/info/{subset}_1000.txt'       
 
         if(not os.path.exists(target_dir)):
@@ -138,7 +136,7 @@ if(__name__ == '__main__'):
         
         loader = DataLoader(LRW1000_Dataset(index_file, target_dir),
                 batch_size = 96, 
-                num_workers = 8,   
+                num_workers = 16,   
                 shuffle = False,         
                 drop_last = False)
         

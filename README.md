@@ -18,16 +18,15 @@
 
 ## Introduction
 
-This is the repository of [Learn an Effective Lip Reading Model without Pains](https://arxiv.org/abs/2011.07557). In this repository, we provide pre-trained models and training settings for deep lip reading. We evaluate our pipeline on [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14). We obtain **88.4%** and **55.7%** on LRW and LRW-1000, respectively. The results are comparable and even surpass current state-of-the-art results. **Especially, we reach the current state-of-the-art result (55.7%) on LRW-1000 Dataset.** Please note that this repository achieves a slightly higher performance than the initial arxiv version by further adjusting two training details, including increasing the training epochs and adjusting the horizontal flip.
+This is the repository of [Learn an Effective Lip Reading Model without Pains](https://arxiv.org/abs/2011.07557). In this repository, we provide pre-trained models and training settings for deep lip reading. We evaluate our pipeline on [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14). We obtain **88.4%** and **55.7%** on LRW and LRW-1000, respectively. The results are comparable and even surpass current state-of-the-art results. **Especially, we reach the current state-of-the-art result (55.7%) on LRW-1000 Dataset.**
 
 ## Benchmark
 
 | Year |      Method          |   LRW  |     LRW-1000    |
 |:----:|:--------------------:|:------:|:---------------:|
-|2017|[Chung et al.](https://www.robots.ox.ac.uk/~vgg/publications/2017/Chung17a/chung17a.pdf)   | 61.1%  | - |
-|2017|[Stafylakis et al.](https://arxiv.org/abs/1703.04105)   |83.0% | - |
-|2018|[Stafylakis et al. (with word boundary)](https://arxiv.org/abs/1811.01194)   |**88.8%** | - |
-|2019|[Yang et at.](https://arxiv.org/abs/1810.06990) | - | 38.19% |
+|2017|[Chung et al.](https://www.robots.ox.ac.uk/~vgg/publications/2017/Chung17a/chung17a.pdf)   | 61.1%  | 25.7% |
+|2017|[Stafylakis et al.](https://arxiv.org/abs/1703.04105)   |83.5% | 38.2% |
+|2018|[Stafylakis et al.](https://arxiv.org/abs/1811.01194)   |**88.8%** | - |
 |2019|[Wang et al.](https://bmvc2019.org/wp-content/uploads/papers/1211-paper.pdf)   |83.3% | 36.9% |
 |2019|[Weng et al.](https://arxiv.org/abs/1905.02540)   |84.1% | - |
 |2020|[Luo et al.](https://arxiv.org/abs/2003.03983)   | 83.5% | 38.7% |
@@ -35,29 +34,36 @@ This is the repository of [Learn an Effective Lip Reading Model without Pains](h
 |2020|[Zhang et al.](https://arxiv.org/abs/2003.03206)   |85.0% | 45.2% |
 |2020|[Martinez et al.](https://arxiv.org/abs/2001.08702)   |85.3% | 41.4% |
 |2020|[Ma et al.](https://arxiv.org/abs/2007.06504)   |87.7% |43.2%|
-|**2020**|    **ResNet18 + BiGRU (Our Baseline)**  |   83.7%   |     46.5%    |
-|**2020**|    **Our Method**  |   85.5%   |     48.3%    |
-|**2020**|    **Our Method (with word boundary)**  |  88.4%    |     **55.7%**    |
+|**2020**|    **ResNet18 + BiGRU (Baseline + Cosine LR)**  |   85.0%   |     47.1%    |
+|**2020**|    **ResNet18 + BiGRU (Baseline with word boundary + Cosine LR)**  |   87.5%   |     55.0%    |
+|**2020**|    **Our Method**  |   86.2%   |     48.3%    |
+|**2020**|    **Our Method (with word boundary)**  |  88.4%    |     **56.0%**    |
 
 
 
 ## Dataset Preparation
 
-1. Download  [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.htm) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14) and place `lrw_mp4` and `LRW1000_Public` in the root of this repository. 
+1. Download  [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.htm) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14) and link `lrw_mp4` and `LRW1000_Public` in the root of this repository:
 
-2. You can run the  `scripts/prepare_lrw.py` and `scripts/prepare_lrw1000.py` to generate training samples of LRW and LRW-1000 Dataset respectively:
+```
+ln -s PATH_TO_DATA/lrw_mp4 .
+ln -s PATH_TO_DATA/LRW1000_Public .
+```
+
+2. You can run `scripts/prepare_lrw.py` and `scripts/prepare_lrw1000.py` to generate training samples of LRW and LRW-1000 Dataset respectively:
 
 ```
 python scripts/prepare_lrw.py
 python scripts/prepare_lrw1000.py 
 ```
 
-The mouth videos will be saved in the `.pkl` format
+The mouth videos, labels, and word boundary information will be saved in the `.pkl` format. We pack image sequence as `jpeg` format into our `.pkl` files and decoding via (PyTurboJPEG)[https://github.com/lilohuang/PyTurboJPEG]. You may need to modify the `utils/dataset.py` file when training your own dataset.
 
 ## How to test
 
 Link of pretrained weights:
-[Baidu Yun](https://pan.baidu.com/s/1mkKPmW2ezuctyoHwPNUkog)(code: 1hpa), [Google Drive](https://drive.google.com/drive/folders/115bAZXOZqsBJWvX28HjXRwEhNJzJlq88?usp=sharing)
+
+Baidu Yun: <https://pan.baidu.com/s/1-bLDBdlAkcpQP7-6942rag> (code: 26qn), Google Drive: <https://drive.google.com/drive/folders/13qSCBRvlsw7aof3EfQdRGuPbnV4ljrp4?usp=sharing>
 
 If you can not access to Baidu Yun, please email dalu.feng@vipl.ict.ac.cn or fengdalu@gmail.com
 
@@ -81,7 +87,7 @@ python main_visual.py \
     --mixup=False \
     --label_smooth=False \
     --se=False \
-    --weights='checkpoints/lrw-baseline-acc-0.83772.pt'
+    --weights='checkpoints/lrw-cosine-lr-acc-0.85080.pt'
 ```
 
 To test our model in LRW-1000 Dataset: 
@@ -102,7 +108,7 @@ python main_visual.py \
     --mixup=False \
     --label_smooth=False \
     --se=True \
-    --weights='checkpoints/lrw1000-border-se-mixup-label-smooth-cosine-lr-wd-1e-4-acc-0.5578.pt'
+    --weights='checkpoints/lrw1000-border-se-mixup-label-smooth-cosine-lr-wd-1e-4-acc-0.56023.pt'
 ```
 
 ## How to train
@@ -112,7 +118,7 @@ For example, to train lrw baseline:
 ```
 python main_visual.py \
     --gpus='0,1,2,3'  \
-    --lr=1e-3 \
+    --lr=3e-4 \
     --batch_size=400 \
     --num_workers=8 \
     --max_epoch=120 \
@@ -130,7 +136,7 @@ python main_visual.py \
 Optional arguments:
 
 - `gpus`: the GPU id used for training
-- `lr`: learning rate
+- `lr`: learning rate. By default, we automatically applied the [Linear Scale Rule](https://arxiv.org/abs/1706.02677) in code (e.g., lr=3e-4 for 4 GPUs x 32 video/gpu and lr=1.2e-3 for 8 GPUs x 128 video/gpu). We recommend lr=3e-4 for 32 video/gpu when training from scratch. You need to modify the learning rate based on your setting.
 - `batch_size`: batch size
 - `num_workers`: the number of processes used for data loading
 - `max_epoch`: the maximum epochs in training
@@ -150,6 +156,7 @@ More training details and setting can be found in [our paper](https://arxiv.org/
 
 - PyTorch 1.6
 - opencv-python
+- TurboJPEG and (PyTurboJPEG)[https://github.com/lilohuang/PyTurboJPEG]
 
 ## Citation
 

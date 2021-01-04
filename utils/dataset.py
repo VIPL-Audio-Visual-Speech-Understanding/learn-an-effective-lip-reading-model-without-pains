@@ -7,8 +7,10 @@ import os
 from torch.utils.data import Dataset
 from .cvtransforms import *
 import torch
+from turbojpeg import TurboJPEG, TJPF_GRAY, TJSAMP_GRAY, TJFLAG_PROGRESSIVE
 
 
+jpeg = TurboJPEG()
 class LRWDataset(Dataset):
     def __init__(self, phase, args):
 
@@ -24,7 +26,7 @@ class LRWDataset(Dataset):
             setattr(self.args, 'is_aug', True)
 
         for (i, label) in enumerate(self.labels):
-            files = glob.glob(os.path.join('lrw_roi_80_116_175_211_npy_gray_pkl', label, phase, '*.pkl'))                    
+            files = glob.glob(os.path.join('lrw_roi_80_116_175_211_npy_gray_pkl_jpeg', label, phase, '*.pkl'))                    
             files = sorted(files)
             
 
@@ -35,7 +37,11 @@ class LRWDataset(Dataset):
             
         tensor = torch.load(self.list[idx])                    
         
-        inputs = tensor.get('video') / 255.0
+        inputs = tensor.get('video')
+        inputs = [jpeg.decode(img, pixel_format=TJPF_GRAY) for img in inputs]
+        inputs = np.stack(inputs, 0) / 255.0
+        inputs = inputs[:,:,:,0]
+        
                 
         if(self.phase == 'train'):
             batch_img = RandomCrop(inputs, (88, 88))

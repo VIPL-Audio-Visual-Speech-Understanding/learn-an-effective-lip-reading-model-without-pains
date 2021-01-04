@@ -2,6 +2,7 @@ from .video_cnn import VideoCNN
 import torch
 import torch.nn as nn
 import random
+from torch.cuda.amp import autocast, GradScaler
 
 
 class VideoModel(nn.Module):
@@ -24,9 +25,15 @@ class VideoModel(nn.Module):
 
     def forward(self, v, border=None):
         self.gru.flatten_parameters()
-                                
-        f_v = self.video_cnn(v)  
-        f_v = self.dropout(f_v)        
+        
+        if(self.training):                            
+            with autocast():
+                f_v = self.video_cnn(v)  
+                f_v = self.dropout(f_v)        
+            f_v = f_v.float()
+        else:                            
+            f_v = self.video_cnn(v)  
+            f_v = self.dropout(f_v)        
         
         if(self.args.border):
             border = border[:,:,None]

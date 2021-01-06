@@ -137,6 +137,7 @@ Optional arguments:
 - `num_workers`: the number of processes used for data loading
 - `max_epoch`: the maximum epochs in training
 - `test`: The test mode. When using this mode, the program will only test once and exit.
+- `weights`(optional): The path of pre-trained weight. If this option is specified, the model will load the pre-trained weights by the given location.
 - `save_prefix`: the save prefix of pre-trained weights
 - `n_class`: the number of total word classes
 - `dataset`: the dataset used for training and testing, only `lrw` and `lrw1000` are supported.

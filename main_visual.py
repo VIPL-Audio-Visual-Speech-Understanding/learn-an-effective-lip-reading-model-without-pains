@@ -32,7 +32,6 @@ def str2bool(v):
 parser.add_argument('--gpus', type=str, required=True)
 parser.add_argument('--lr', type=float, required=True)
 parser.add_argument('--batch_size', type=int, required=True)
-parser.add_argument('--test_interval', type=float, required=True)
 parser.add_argument('--n_class', type=int, required=True)
 parser.add_argument('--num_workers', type=int, required=True)
 parser.add_argument('--max_epoch', type=int, required=True)

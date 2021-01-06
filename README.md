@@ -77,7 +77,6 @@ python main_visual.py \
     --batch_size=128 \
     --num_workers=8 \
     --max_epoch=120 \
-    --test_interval=1.0 \
     --test=True \
     --save_prefix='checkpoints/lrw-baseline/' \
     --n_class=500 \
@@ -98,7 +97,6 @@ python main_visual.py \
     --batch_size=128 \
     --num_workers=8 \
     --max_epoch=120 \
-    --test_interval=1.0 \
     --test=True \
     --save_prefix='checkpoints/lrw-1000-final/' \
     --n_class=1000 \
@@ -121,7 +119,6 @@ python main_visual.py \
     --batch_size=400 \
     --num_workers=8 \
     --max_epoch=120 \
-    --test_interval=1.0 \
     --test=False \
     --save_prefix='checkpoints/lrw-baseline/' \
     --n_class=500 \
@@ -139,8 +136,7 @@ Optional arguments:
 - `batch_size`: batch size
 - `num_workers`: the number of processes used for data loading
 - `max_epoch`: the maximum epochs in training
-- `test_interval`: the number of epochs between testing, notice this number can be set lower than 1.0. (e.g. 0.5, 0.25, etc.)
-- `test`: test mode
+- `test`: The test mode. When using this mode, the program will only test once and exit.
 - `save_prefix`: the save prefix of pre-trained weights
 - `n_class`: the number of total word classes
 - `dataset`: the dataset used for training and testing, only `lrw` and `lrw1000` are supported.

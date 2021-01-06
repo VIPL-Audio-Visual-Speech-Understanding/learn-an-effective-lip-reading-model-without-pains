@@ -138,7 +138,7 @@ Optional arguments:
 - `max_epoch`: the maximum epochs in training
 - `test`: The test mode. When using this mode, the program will only test once and exit.
 - `weights`(optional): The path of pre-trained weight. If this option is specified, the model will load the pre-trained weights by the given location.
-- `save_prefix`: the save prefix of pre-trained weights
+- `save_prefix`: the save prefix of model parameters
 - `n_class`: the number of total word classes
 - `dataset`: the dataset used for training and testing, only `lrw` and `lrw1000` are supported.
 - `border`:  use word boundary indicated variable for training and testing

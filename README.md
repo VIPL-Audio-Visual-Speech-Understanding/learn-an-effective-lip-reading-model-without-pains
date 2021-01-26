@@ -159,7 +159,7 @@ More training details and setting can be found in [our paper](https://arxiv.org/
 If you find this code useful in your research, please consider to cite the following papers:
 
 ```
-@article{ma2020towards,
+@article{feng2020learn,
   author       = "Feng, Dalu and Yang, Shuang and Shan, Shiguang and Chen, Xilin",
   title        = "Learn an Effective Lip Reading Model without Pains",
   journal      = "arXiv preprint arXiv:2011.07557",

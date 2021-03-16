@@ -18,7 +18,7 @@
 
 ## Introduction
 
-This is the repository of [Learn an Effective Lip Reading Model without Pains](https://arxiv.org/abs/2011.07557). In this repository, we provide pre-trained models and training settings for deep lip reading. We evaluate our pipeline on [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14). We obtain **88.4%** and **56.0%** on LRW and LRW-1000, respectively. The results are comparable and even surpass current state-of-the-art results. **Especially, we reach the current state-of-the-art result (56.0%) on LRW-1000 Dataset.**
+This is the repository of [Learn an Effective Lip Reading Model without Pains](https://arxiv.org/abs/2011.07557). In this repository, we provide a deep lip reading pipeline as well as pre-trained models and training settings. We evaluate our pipeline on [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14). We obtain **88.4%** and **56.0%** on LRW and LRW-1000, respectively. The results are comparable and even surpass current state-of-the-art results. **Especially, we reach the current state-of-the-art result (56.0%) on LRW-1000 Dataset.**
 
 ## Benchmark
 
@@ -41,7 +41,6 @@ This is the repository of [Learn an Effective Lip Reading Model without Pains](h
 |**2020**|    **Our Method (with word boundary)**  |  88.4%    |     **56.0%**    |
 
 
-
 ## Dataset Preparation
 
 1. Download  [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.htm) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14) and link `lrw_mp4` and `LRW1000_Public` in the root of this repository:
@@ -51,20 +50,24 @@ ln -s PATH_TO_DATA/lrw_mp4 .
 ln -s PATH_TO_DATA/LRW1000_Public .
 ```
 
-2. You can run `scripts/prepare_lrw.py` and `scripts/prepare_lrw1000.py` to generate training samples of LRW and LRW-1000 Dataset respectively:
+2. Run `scripts/prepare_lrw.py` and `scripts/prepare_lrw1000.py` to generate training samples of LRW and LRW-1000 Dataset respectively:
 
 ```
 python scripts/prepare_lrw.py
 python scripts/prepare_lrw1000.py 
 ```
 
-The mouth videos, labels, and word boundary information will be saved in the `.pkl` format. We pack image sequence as `jpeg` format into our `.pkl` files and decoding via [PyTurboJPEG](https://github.com/lilohuang/PyTurboJPEG). You may need to modify the `utils/dataset.py` file when training your own dataset.
+The mouth videos, labels, and word boundary information will be saved in the `.pkl` format. We pack image sequence as `jpeg` format into our `.pkl` files and decoding via [PyTurboJPEG](https://github.com/lilohuang/PyTurboJPEG). If you want to use your own dataset, you may need to modify the `utils/dataset.py` file.
 
-## How to test
+## Pretrain weights
+
+We provide pretrained weight on LRW/LRW-1000 dataset for evaluation. For smaller datasets, the pretrained weights can be used as a good start point for feature extraction, finetuning, and so on.
 
 Link of pretrained weights: [Baidu Yun](https://pan.baidu.com/s/1-bLDBdlAkcpQP7-6942rag) (code: 26qn), [Google Drive](https://drive.google.com/drive/folders/13qSCBRvlsw7aof3EfQdRGuPbnV4ljrp4?usp=sharing)
 
 If you can not access to provided links, please email dalu.feng@vipl.ict.ac.cn or fengdalu@gmail.com.
+
+## How to test
 
 To test our provided weights, you should download weights and place them in the root of this repository. 
 

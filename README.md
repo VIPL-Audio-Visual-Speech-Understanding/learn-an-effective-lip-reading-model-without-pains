@@ -9,7 +9,7 @@
 - [Introduction](#Introduction)
 - [Benchmark](#Benchmark)
 - [Dataset Preparation](#Dataset-Preparation)
-- [Pretrain Weights](#Pretrain Weights)
+- [Pretrain Weights](#Pretrain-Weights)
 - [How to test](#How-to-test)
 - [How to train](#How-to-train)
 - [Dependencies](#Dependencies)

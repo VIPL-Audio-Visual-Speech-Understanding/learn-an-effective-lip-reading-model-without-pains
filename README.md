@@ -43,7 +43,7 @@ This is the repository of [Learn an Effective Lip Reading Model without Pains](h
 
 ## Dataset Preparation
 
-1. Download  [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.htm) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14) and link `lrw_mp4` and `LRW1000_Public` in the root of this repository:
+1. Download [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.htm) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14) and link `lrw_mp4` and `LRW1000_Public` in the root of this repository:
 
 ```
 ln -s PATH_TO_DATA/lrw_mp4 .
@@ -59,9 +59,9 @@ python scripts/prepare_lrw1000.py
 
 The mouth videos, labels, and word boundary information will be saved in the `.pkl` format. We pack image sequence as `jpeg` format into our `.pkl` files and decoding via [PyTurboJPEG](https://github.com/lilohuang/PyTurboJPEG). If you want to use your own dataset, you may need to modify the `utils/dataset.py` file.
 
-## Pretrain weights
+## Pretrain Weights
 
-We provide pretrained weight on LRW/LRW-1000 dataset for evaluation. For smaller datasets, the pretrained weights can be used as a good start point for feature extraction, finetuning, and so on.
+We provide pretrained weight on LRW/LRW-1000 dataset for evaluation. For smaller datasets, the pretrained weights can be provide a good start point for feature extraction, finetuning, and so on.
 
 Link of pretrained weights: [Baidu Yun](https://pan.baidu.com/s/1-bLDBdlAkcpQP7-6942rag) (code: 26qn), [Google Drive](https://drive.google.com/drive/folders/13qSCBRvlsw7aof3EfQdRGuPbnV4ljrp4?usp=sharing)
 

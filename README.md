@@ -163,11 +163,13 @@ More training details and setting can be found in [our paper](https://arxiv.org/
 If you find this code useful in your research, please consider to cite the following papers:
 
 ```
-@article{feng2021software,
-  author       = "Feng, Dalu and Yang, Shuang and Shan, Shiguang and Chen, Xilin",
-  title        = "An Efficient Software for building Lip Reading Models without Pains",
-  journal      = "IEEE International Conference on Multimedia and Expo (ICME) Workshop",
-  year         = "2021",
+@inproceedings{feng2021efficient,
+  title={An Efficient Software for Building LIP Reading Models Without Pains},
+  author={Feng, Dalu and Yang, Shuang and Shan, Shiguang},
+  booktitle={2021 IEEE International Conference on Multimedia \& Expo Workshops (ICMEW)},
+  pages={1--2},
+  year={2021},
+  organization={IEEE}
 }
 @article{feng2020learn,
   author       = "Feng, Dalu and Yang, Shuang and Shan, Shiguang and Chen, Xilin",

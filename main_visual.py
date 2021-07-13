@@ -112,7 +112,7 @@ def add_msg(msg, k, v):
 def test():
     
     with torch.no_grad():
-        dataset = Dataset('test', args)
+        dataset = Dataset('val', args)
         print('Start Testing, Data Length:',len(dataset))
         loader = dataset2dataloader(dataset, args.batch_size, args.num_workers, shuffle=False)        
         

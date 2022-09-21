@@ -64,7 +64,7 @@ The mouth videos, labels, and word boundary information will be saved in the `.p
 
 We provide pretrained weight on LRW/LRW-1000 dataset for evaluation. For smaller datasets, the pretrained weights can be provide a good start point for feature extraction, finetuning, and so on.
 
-Link of pretrained weights: [Baidu Yun](https://pan.baidu.com/s/1-bLDBdlAkcpQP7-6942rag) (code: 26qn), [Google Drive](https://drive.google.com/drive/folders/13qSCBRvlsw7aof3EfQdRGuPbnV4ljrp4?usp=sharing)
+Link of pretrained weights: [Baidu Yun](https://pan.baidu.com/s/1FuOKEX_ZI7QgobQmZdmq8A) (code: ivgl)
 
 If you can not access to provided links, please email dalu.feng@vipl.ict.ac.cn or fengdalu@gmail.com.
 

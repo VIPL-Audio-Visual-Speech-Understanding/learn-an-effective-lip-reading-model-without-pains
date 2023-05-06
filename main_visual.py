@@ -7,7 +7,6 @@ import numpy as np
 import time
 from model import VideoModel
 import torch.optim as optim
-from LSR import LSR
 from torch.cuda.amp import autocast, GradScaler
 
 torch.backends.cudnn.benchmark = True
@@ -56,10 +55,8 @@ else:
 
 video_model = VideoModel(args).cuda()
 
-
 def parallel_model(model):
-    model = nn.DataParallel(model)
-    return model
+    return nn.DataParallel(model)
 
 
 def load_missing(model, pretrained_dict):
@@ -97,11 +94,11 @@ def dataset2dataloader(dataset, batch_size, num_workers, shuffle=True):
     return loader
 
 
-def add_msg(msg, k, v):
-    if msg != '':
-        msg = msg + ','
-    msg = msg + k.format(v)
-    return msg
+def add_msg(raw_msg, k, v):
+    if raw_msg:
+        raw_msg += ','
+    raw_msg += k.format(v)
+    return raw_msg
 
 
 def test():
@@ -130,7 +127,7 @@ def test():
             toc = time.time()
             if i_iter % 10 == 0:
                 msg = ''
-                msg = add_msg(msg, 'v_acc={:.5f}', np.array(v_acc).reshape(-1).mean())
+                msg = add_msg(msg, 'v_acc={:.5f}', np.array(v_acc).mean())
                 msg = add_msg(msg, 'eta={:.5f}', (toc - tic) * (len(loader) - i_iter) / 3600.0)
 
                 print(msg)
@@ -141,11 +138,8 @@ def test():
         return acc, msg
 
 
-def showLR(optimizer):
-    lr = []
-    for param_group in optimizer.param_groups:
-        lr += ['{:.6f}'.format(param_group['lr'])]
-    return ','.join(lr)
+def show_lr(optimizer):
+    return ','.join(['{:.6f}'.format(param_group['lr']) for param_group in optimizer.param_groups])
 
 
 def train():
@@ -189,7 +183,7 @@ def train():
                                                              (toc - tic) * (len(loader) - i_iter) / 3600.0)
             for k, v in loss.items():
                 msg += ',{}={:.5f}'.format(k, v)
-            msg = msg + str(',lr=' + str(showLR(optim_video)))
+            msg = f",lr={show_lr(optim_video)}"
             msg = msg + str(',best_acc={:2f}'.format(best_acc))
             print(msg)
 
@@ -201,7 +195,7 @@ def train():
                     saved_file = '{}_iter_{}_epoch_{}_{}.pt'.format(args.save_prefix, tot_iter, epoch, msg)
 
                     temp = os.path.split(saved_file)[0]
-                    if (not os.path.exists(temp)):
+                    if not os.path.exists(temp):
                         os.makedirs(temp)
                     torch.save(
                         {

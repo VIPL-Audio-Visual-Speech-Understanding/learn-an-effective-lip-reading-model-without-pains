@@ -157,7 +157,12 @@ class VideoCNN(nn.Module):
     def _initialize_weights(self):
         for m in self.modules():
             if isinstance(m, nn.Conv3d) or isinstance(m, nn.Conv2d) or isinstance(m, nn.Conv1d):
-                n = m.kernel_size[0] * m.kernel_size[1] * m.kernel_size[2] * m.out_channels
+                if len(m.kernel_size) >= 3:
+                    n = m.kernel_size[0] * m.kernel_size[1] * m.kernel_size[2] * m.out_channels
+                elif len(m.kernel_size) == 2:
+                    n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
+                else:
+                    n = m.kernel_size[0] * m.out_channels
                 m.weight.data.normal_(0, math.sqrt(2. / n))
                 if m.bias is not None:
                     m.bias.data.zero_()
@@ -165,4 +170,3 @@ class VideoCNN(nn.Module):
             elif isinstance(m, nn.BatchNorm3d) or isinstance(m, nn.BatchNorm2d) or isinstance(m, nn.BatchNorm1d):
                 m.weight.data.fill_(1)
                 m.bias.data.zero_()
-

@@ -8,52 +8,44 @@ import time
 from model import VideoModel
 import torch.optim as optim
 from torch.cuda.amp import autocast, GradScaler
+from utils import LRWDataset as Dataset
 
 torch.backends.cudnn.benchmark = True
-parser = argparse.ArgumentParser()
 
 
-def str2bool(v):
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
-        return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
-        return False
-    else:
-        raise argparse.ArgumentTypeError('Unsupported value encountered.')
+def parse_arguments() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
 
+    def str2bool(v: str) -> bool:
+        if v.lower() in ('yes', 'true', 't', 'y', '1'):
+            return True
+        elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+            return False
+        else:
+            raise argparse.ArgumentTypeError('Unsupported value encountered.')
 
-parser.add_argument('--gpus', type=str, required=True)
-parser.add_argument('--lr', type=float, required=True)
-parser.add_argument('--batch_size', type=int, required=True)
-parser.add_argument('--n_class', type=int, required=True)
-parser.add_argument('--num_workers', type=int, required=True)
-parser.add_argument('--max_epoch', type=int, required=True)
-parser.add_argument('--test', type=str2bool, required=True)
+    parser.add_argument('--gpus', type=str, required=True)
+    parser.add_argument('--lr', type=float, required=True)
+    parser.add_argument('--batch_size', type=int, required=True)
+    parser.add_argument('--n_class', type=int, required=True)
+    parser.add_argument('--num_workers', type=int, required=True)
+    parser.add_argument('--max_epoch', type=int, required=True)
+    parser.add_argument('--test', type=str2bool, required=True)
 
-# load opts
-parser.add_argument('--weights', type=str, required=False, default=None)
+    # load opts
+    parser.add_argument('--weights', type=str, required=False, default=None)
 
-# save prefix
-parser.add_argument('--save_prefix', type=str, required=True)
+    # save prefix
+    parser.add_argument('--save_prefix', type=str, required=True)
 
-# dataset
-parser.add_argument('--dataset', type=str, required=True)
-# parser.add_argument('--border', type=str2bool, required=True)
-# parser.add_argument('--mixup', type=str2bool, required=True)
-# parser.add_argument('--label_smooth', type=str2bool, required=True)
-# parser.add_argument('--se', type=str2bool, required=True)
+    # dataset
+    parser.add_argument('--dataset', type=str, required=True)
 
-args = parser.parse_args()
-os.environ['CUDA_VISIBLE_DEVICES'] = args.gpus
+    args = parser.parse_args()
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpus
 
-if args.dataset == 'lrw':
-    from utils import LRWDataset as Dataset
-# elif (args.dataset == 'lrw1000'):
-#     from utils import LRW1000_Dataset as Dataset
-else:
-    raise Exception('lrw is supported only')
+    return args
 
-video_model = VideoModel(args).cuda()
 
 def parallel_model(model):
     return nn.DataParallel(model)
@@ -72,16 +64,8 @@ def load_missing(model, pretrained_dict):
     return model
 
 
-lr = args.batch_size / 32.0 / torch.cuda.device_count() * args.lr
-optim_video = optim.Adam(video_model.parameters(), lr=lr, weight_decay=1e-4)
-scheduler = optim.lr_scheduler.CosineAnnealingLR(optim_video, T_max=args.max_epoch, eta_min=5e-6)
-
-if args.weights is not None:
-    print('load weights')
-    weight = torch.load(args.weights, map_location=torch.device('cpu'))
-    load_missing(video_model, weight.get('video_model'))
-
-video_model = parallel_model(video_model)
+def show_lr(optimizer):
+    return ','.join(['{:.6f}'.format(param_group['lr']) for param_group in optimizer.param_groups])
 
 
 def dataset2dataloader(dataset, batch_size, num_workers, shuffle=True):
@@ -101,45 +85,39 @@ def add_msg(msg, k, v):
     return msg
 
 
+@torch.no_grad()
 def test():
-    with torch.no_grad():
-        dataset = Dataset('val', args)
-        print('Start Testing, Data Length:', len(dataset))
-        loader = dataset2dataloader(dataset, args.batch_size, args.num_workers, shuffle=False)
+    dataset = Dataset('val', args)
+    print('Start Testing, Data Length:', len(dataset))
+    loader = dataset2dataloader(dataset, args.batch_size, args.num_workers, shuffle=False)
 
-        print('start testing')
-        v_acc = []
-        total = 0
+    print('start testing')
+    v_acc = []
+    total = 0
 
-        for (i_iter, input) in enumerate(loader):
+    for i_iter, input in enumerate(loader):
+        video_model.eval()
 
-            video_model.eval()
+        tic = time.time()
+        video = input['video'].cuda(non_blocking=True)
+        label = input['label'].cuda(non_blocking=True)
 
-            tic = time.time()
-            video = input.get('video').cuda(non_blocking=True)
-            label = input.get('label').cuda(non_blocking=True)
-            total = total + video.size(0)
+        with autocast():
+            y_v = video_model(video)
 
-            with autocast():
-                y_v = video_model(video)
+        v_acc.extend((y_v.argmax(-1) == label).cpu().numpy().tolist())
+        toc = time.time()
 
-            v_acc.extend((y_v.argmax(-1) == label).cpu().numpy().tolist())
-            toc = time.time()
-            if i_iter % 10 == 0:
-                msg = ''
-                msg = add_msg(msg, 'v_acc={:.5f}', np.array(v_acc).mean())
-                msg = add_msg(msg, 'eta={:.5f}', (toc - tic) * (len(loader) - i_iter) / 3600.0)
+        if i_iter % 10 == 0:
+            msg = add_msg('', 'v_acc={:.5f}', np.array(v_acc).mean())
+            msg = add_msg(msg, 'eta={:.5f}', (toc - tic) * (len(loader) - i_iter) / 3600.0)
 
-                print(msg)
+            print(msg)
 
-        acc = float(np.array(v_acc).reshape(-1).mean())
-        msg = 'v_acc_{:.5f}_'.format(acc)
+    acc = float(np.array(v_acc).mean())
+    msg = f'v_acc_{acc:.5f}_'
 
-        return acc, msg
-
-
-def show_lr(optimizer):
-    return ','.join(['{:.6f}'.format(param_group['lr']) for param_group in optimizer.param_groups])
+    return acc, msg
 
 
 def train():
@@ -154,21 +132,21 @@ def train():
     scaler = GradScaler()
     for epoch in range(max_epoch):
 
-        for (i_iter, input) in enumerate(loader):
+        for i_iteration, sample in enumerate(loader):
             tic = time.time()
 
             video_model.train()
-            video = input.get('video').cuda(non_blocking=True)
-            label = input.get('label').cuda(non_blocking=True).long()
+            video = sample['video'].cuda(non_blocking=True)
+            label = sample['label'].cuda(non_blocking=True).long()
 
             loss = {}
 
             loss_fn = nn.CrossEntropyLoss()
 
             with autocast():
-                    y_v = video_model(video)
+                y_v = video_model(video)
 
-                    loss_bp = loss_fn(y_v, label)
+                loss_bp = loss_fn(y_v, label)
 
             loss['CE V'] = loss_bp
 
@@ -179,28 +157,25 @@ def train():
 
             toc = time.time()
 
-            msg = 'epoch={},train_iter={},eta={:.5f}'.format(epoch, tot_iter,
-                                                             (toc - tic) * (len(loader) - i_iter) / 3600.0)
+            msg = f'epoch={epoch},train_iter={tot_iter},eta={(toc - tic) * (len(loader) - i_iteration) / 3600.0:.5f}'
             for k, v in loss.items():
-                msg += ',{}={:.5f}'.format(k, v)
-            msg += f",lr={show_lr(optim_video)}"
-            msg = msg + str(',best_acc={:2f}'.format(best_acc))
+                msg += f',{k}={v:.5f}'
+            msg += f",lr={show_lr(optim_video)},best_acc={best_acc:2f}"
             print(msg)
 
-            if i_iter == len(loader) - 1 or (epoch == 0 and i_iter == 0):
-
+            if i_iteration == len(loader) - 1 or (epoch == 0 and i_iteration == 0):
                 acc, msg = test()
 
                 if acc > best_acc:
-                    saved_file = '{}_iter_{}_epoch_{}_{}.pt'.format(args.save_prefix, tot_iter, epoch, msg)
+                    saved_file = f'{args.save_prefix}_iter_{tot_iter}_epoch_{epoch}_{msg}.pt'
 
                     temp = os.path.split(saved_file)[0]
                     if not os.path.exists(temp):
                         os.makedirs(temp)
-                    torch.save(
-                        {
-                            'video_model': video_model.module.state_dict(),
-                        }, saved_file)
+
+                    torch.save({
+                        'video_model': video_model.module.state_dict(),
+                    }, saved_file)
 
                 if tot_iter != 0:
                     best_acc = max(acc, best_acc)
@@ -211,6 +186,19 @@ def train():
 
 
 if __name__ == '__main__':
+    args = parse_arguments()
+    video_model = VideoModel(args).cuda()
+
+    lr = args.batch_size / 32.0 / torch.cuda.device_count() * args.lr
+    optim_video = optim.Adam(video_model.parameters(), lr=lr, weight_decay=1e-4)
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(optim_video, T_max=args.max_epoch, eta_min=5e-6)
+
+    if args.weights is not None:
+        print('load weights')
+        weight = torch.load(args.weights, map_location=torch.device('cpu'))
+        load_missing(video_model, weight.get('video_model'))
+
+    video_model = parallel_model(video_model)
     if args.test:
         acc, msg = test()
         print(f'acc={acc}')

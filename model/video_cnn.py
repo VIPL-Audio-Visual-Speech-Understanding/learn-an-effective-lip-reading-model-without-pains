@@ -1,11 +1,6 @@
 # coding: utf-8
 import math
-import numpy as np
-
-import torch
 import torch.nn as nn
-from torch.autograd import Variable
-import torch.nn.functional as F
 
 
 def conv3x3(in_planes, out_planes, stride=1):
@@ -13,7 +8,7 @@ def conv3x3(in_planes, out_planes, stride=1):
                      padding=1, bias=False)
 
 
-def conv1x1(in_planes, out_planes, stride=1):
+def conv1x1(in_planes, out_planes):
     return nn.Conv2d(in_planes, out_planes, kernel_size=1)
 
 
@@ -31,10 +26,10 @@ class BasicBlock(nn.Module):
         self.stride = stride
         self.se = se
 
-        if (self.se):
-            self.gap = nn.AdaptiveAvgPool2d(1)
-            self.conv3 = conv1x1(planes, planes // 16)
-            self.conv4 = conv1x1(planes // 16, planes)
+        # if (self.se):
+        #     self.gap = nn.AdaptiveAvgPool2d(1)
+        #     self.conv3 = conv1x1(planes, planes // 16)
+        #     self.conv4 = conv1x1(planes // 16, planes)
 
     def forward(self, x):
         residual = x
@@ -47,13 +42,13 @@ class BasicBlock(nn.Module):
         if self.downsample is not None:
             residual = self.downsample(x)
 
-        if (self.se):
-            w = self.gap(out)
-            w = self.conv3(w)
-            w = self.relu(w)
-            w = self.conv4(w).sigmoid()
-
-            out = out * w
+        # if (self.se):
+        #     w = self.gap(out)
+        #     w = self.conv3(w)
+        #     w = self.relu(w)
+        #     w = self.conv4(w).sigmoid()
+        #
+        #     out = out * w
 
         out = out + residual
         out = self.relu(out)

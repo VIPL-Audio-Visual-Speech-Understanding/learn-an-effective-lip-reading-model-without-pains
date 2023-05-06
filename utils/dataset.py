@@ -26,7 +26,7 @@ class LRWDataset(Dataset):
             setattr(self.args, 'is_aug', True)
 
         for (i, label) in enumerate(self.labels):
-            files = glob.glob(os.path.join('rois', label, phase, '*.pkl'))
+            files = glob.glob(os.path.join('lrw_roi_npy_gray_pkl_jpeg', label, phase, '*.pkl'))
             files = sorted(files)
             
 

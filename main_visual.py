@@ -94,15 +94,15 @@ def dataset2dataloader(dataset, batch_size, num_workers, shuffle=True):
     return loader
 
 
-def add_msg(raw_msg, k, v):
-    if raw_msg:
-        raw_msg += ','
-    raw_msg += k.format(v)
-    return raw_msg
+def add_msg(msg, k, v):
+    if msg != '':
+        msg = msg + ','
+    msg = msg + k.format(v)
+    return msg
 
 
 def test():
-    with torch.no_grad():
+    with torch.no_grmd():
         dataset = Dataset('val', args)
         print('Start Testing, Data Length:', len(dataset))
         loader = dataset2dataloader(dataset, args.batch_size, args.num_workers, shuffle=False)
@@ -127,7 +127,7 @@ def test():
             toc = time.time()
             if i_iter % 10 == 0:
                 msg = ''
-                msg = add_msg(msg, 'v_acc={:.5f}', np.array(v_acc).mean())
+                msg = add_msg(msg, 'v_acc={:.5f}', np.array(v_acc).reshape(-1).mean())
                 msg = add_msg(msg, 'eta={:.5f}', (toc - tic) * (len(loader) - i_iter) / 3600.0)
 
                 print(msg)

@@ -95,9 +95,9 @@ def dataset2dataloader(dataset, batch_size, num_workers, shuffle=True):
 
 
 def add_msg(msg, k, v):
-    if msg != '':
-        msg = msg + ','
-    msg = msg + k.format(v)
+    if msg:
+        msg += ','
+    msg += k.format(v)
     return msg
 
 
@@ -127,7 +127,7 @@ def test():
             toc = time.time()
             if i_iter % 10 == 0:
                 msg = ''
-                msg = add_msg(msg, 'v_acc={:.5f}', np.array(v_acc).reshape(-1).mean())
+                msg = add_msg(msg, 'v_acc={:.5f}', np.array(v_acc).mean())
                 msg = add_msg(msg, 'eta={:.5f}', (toc - tic) * (len(loader) - i_iter) / 3600.0)
 
                 print(msg)
@@ -183,7 +183,7 @@ def train():
                                                              (toc - tic) * (len(loader) - i_iter) / 3600.0)
             for k, v in loss.items():
                 msg += ',{}={:.5f}'.format(k, v)
-            msg = f",lr={show_lr(optim_video)}"
+            msg += f",lr={show_lr(optim_video)}"
             msg = msg + str(',best_acc={:2f}'.format(best_acc))
             print(msg)
 

@@ -4,9 +4,14 @@ import torch
 from torch.utils.data import Dataset
 from torchvision import transforms
 from turbojpeg import TurboJPEG, TJPF_GRAY
-from load import load_labels
-
+from typing import List
 jpeg = TurboJPEG()
+
+
+def load_labels() -> List[str]:
+    with open('label_sorted.txt') as f:
+        labels = f.read().splitlines()
+    return labels
 
 
 class LRWDataset(Dataset):

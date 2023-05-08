@@ -4,7 +4,6 @@ import torch
 from turbojpeg import TurboJPEG, TJPF_GRAY
 from typing import List
 from .cvtransforms import *
-from utils import LRWDataset as Dataset
 
 jpeg = TurboJPEG()
 

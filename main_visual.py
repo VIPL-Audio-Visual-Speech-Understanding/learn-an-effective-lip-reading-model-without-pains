@@ -8,7 +8,7 @@ import time
 from model import VideoModel
 import torch.optim as optim
 from torch.cuda.amp import autocast, GradScaler
-from utils.dataset import LRWDataset as Dataset
+from utils import LRWDataset as Dataset
 
 torch.backends.cudnn.benchmark = True
 

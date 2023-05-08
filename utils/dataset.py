@@ -1,10 +1,11 @@
 import os
-import numpy as np
 import torch
-from torch.utils.data import Dataset
-from torchvision import transforms
+
 from turbojpeg import TurboJPEG, TJPF_GRAY
 from typing import List
+from .cvtransforms import *
+from utils import LRWDataset as Dataset
+
 jpeg = TurboJPEG()
 
 
@@ -39,23 +40,13 @@ class LRWDataset(Dataset):
         inputs = inputs[:, :, :, 0]
 
         if self.phase == 'train':
-            transform = transforms.Compose([
-                transforms.ToPILImage(),
-                transforms.RandomCrop((88, 88)),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-            ])
-        else:
-            transform = transforms.Compose([
-                transforms.ToPILImage(),
-                transforms.CenterCrop((88, 88)),
-                transforms.ToTensor(),
-            ])
-
-        batch_img = torch.stack([transform(img.astype(np.float32)) for img in inputs], dim=0)
+            batch_img = random_crop(inputs, (88, 88))
+            batch_img = horizontal_flip(batch_img)
+        elif self.phase == 'val' or self.phase == 'test':
+            batch_img = center_crop(inputs, (88, 88))
 
         result = {
-            'video': batch_img.unsqueeze(1).float(),
+            'video': torch.FloatTensor(batch_img[:, np.newaxis, ...]),
             'label': tensor.get('label'),
             'duration': 1.0 * tensor.get('duration')
         }

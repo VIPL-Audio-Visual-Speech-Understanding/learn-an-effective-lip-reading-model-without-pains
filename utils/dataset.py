@@ -1,6 +1,6 @@
 import os
 import torch
-
+from torch.utils.data import Dataset
 from turbojpeg import TurboJPEG, TJPF_GRAY
 from typing import List
 from .cvtransforms import *

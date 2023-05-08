@@ -1,5 +1,4 @@
 from typing import List
-import torch
 
 
 def load_labels() -> List[str]:

@@ -52,7 +52,7 @@ class LRWDataset(Dataset):
                 transforms.ToTensor(),
             ])
 
-        batch_img = torch.stack([transform(img) for img in inputs], dim=0)
+        batch_img = torch.stack([transform(img.astype(np.float32)) for img in inputs], dim=0)
 
         result = {
             'video': batch_img.unsqueeze(1).float(),

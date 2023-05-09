@@ -1,7 +1,6 @@
 import argparse
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader
 import os
 import numpy as np
 import time
@@ -9,6 +8,7 @@ from model import VideoModel
 import torch.optim as optim
 from torch.cuda.amp import autocast, GradScaler
 from utils import LRWDataset as Dataset
+from utils import helpers
 
 torch.backends.cudnn.benchmark = True
 
@@ -47,53 +47,14 @@ def parse_arguments() -> argparse.Namespace:
     return args
 
 
-def parallel_model(model):
-    return nn.DataParallel(model)
-
-
-def load_missing(model, pretrained_dict):
-    model_dict = model.state_dict()
-    pretrained_dict = {k: v for k, v in pretrained_dict.items() if
-                       k in model_dict.keys() and v.size() == model_dict[k].size()}
-    missed_params = [k for k, v in model_dict.items() if not k in pretrained_dict.keys()]
-
-    print('loaded params/tot params:{}/{}'.format(len(pretrained_dict), len(model_dict)))
-    print('miss matched params:', missed_params)
-    model_dict.update(pretrained_dict)
-    model.load_state_dict(model_dict)
-    return model
-
-
-def show_lr(optimizer):
-    return ','.join(['{:.6f}'.format(param_group['lr']) for param_group in optimizer.param_groups])
-
-
-def dataset2dataloader(dataset, batch_size, num_workers, shuffle=True):
-    loader = DataLoader(dataset,
-                        batch_size=batch_size,
-                        num_workers=num_workers,
-                        shuffle=shuffle,
-                        drop_last=False,
-                        pin_memory=True)
-    return loader
-
-
-def add_msg(msg, k, v):
-    if msg:
-        msg += ','
-    msg += k.format(v)
-    return msg
-
-
 @torch.no_grad()
 def test():
     dataset = Dataset('val', args)
     print('Start Testing, Data Length:', len(dataset))
-    loader = dataset2dataloader(dataset, args.batch_size, args.num_workers, shuffle=False)
+    loader = helpers.dataset2dataloader(dataset, args.batch_size, args.num_workers, shuffle=False)
 
     print('start testing')
     v_acc = []
-    total = 0
 
     for i_iter, input in enumerate(loader):
         video_model.eval()
@@ -109,8 +70,8 @@ def test():
         toc = time.time()
 
         if i_iter % 10 == 0:
-            msg = add_msg('', 'v_acc={:.5f}', np.array(v_acc).mean())
-            msg = add_msg(msg, 'eta={:.5f}', (toc - tic) * (len(loader) - i_iter) / 3600.0)
+            msg = helpers.add_msg('', 'v_acc={:.5f}', np.array(v_acc).mean())
+            msg = helpers.add_msg(msg, 'eta={:.5f}', (toc - tic) * (len(loader) - i_iter) / 3600.0)
 
             print(msg)
 
@@ -124,7 +85,7 @@ def train():
     dataset = Dataset('train', args)
     print('Start Training, Data Length:', len(dataset))
 
-    loader = dataset2dataloader(dataset, args.batch_size, args.num_workers)
+    loader = helpers.dataset2dataloader(dataset, args.batch_size, args.num_workers)
 
     max_epoch = args.max_epoch
     tot_iter = 0
@@ -160,7 +121,7 @@ def train():
             msg = f'epoch={epoch},train_iter={tot_iter},eta={(toc - tic) * (len(loader) - i_iteration) / 3600.0:.5f}'
             for k, v in loss.items():
                 msg += f',{k}={v:.5f}'
-            msg += f",lr={show_lr(optim_video)},best_acc={best_acc:2f}"
+            msg += f",lr={helpers.show_lr(optim_video)},best_acc={best_acc:2f}"
             print(msg)
 
             if i_iteration == len(loader) - 1 or (epoch == 0 and i_iteration == 0):
@@ -196,9 +157,9 @@ if __name__ == '__main__':
     if args.weights is not None:
         print('load weights')
         weight = torch.load(args.weights, map_location=torch.device('cpu'))
-        load_missing(video_model, weight.get('video_model'))
+        helpers.load_missing(video_model, weight.get('video_model'))
 
-    video_model = parallel_model(video_model)
+    video_model = helpers.parallel_model(video_model)
     if args.test:
         acc, msg = test()
         print(f'acc={acc}')

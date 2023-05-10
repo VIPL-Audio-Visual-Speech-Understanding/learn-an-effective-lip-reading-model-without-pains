@@ -82,7 +82,7 @@ def test(batch_size, num_workers=1):
 
 
 def train():
-    dataset = Dataset('train', args)
+    dataset = Dataset('train')
     print('Start Training, Data Length:', len(dataset))
 
     loader = helpers.dataset2dataloader(dataset, args.batch_size, args.num_workers)

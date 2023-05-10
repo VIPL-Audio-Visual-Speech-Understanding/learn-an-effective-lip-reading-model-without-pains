@@ -125,7 +125,7 @@ def train():
             print(msg)
 
             if i_iteration == len(loader) - 1 or (epoch == 0 and i_iteration == 0):
-                acc, msg = test()
+                acc, msg = test(args.batch_size)
 
                 if acc > best_acc:
                     saved_file = f'{args.save_prefix}_iter_{tot_iter}_epoch_{epoch}_{msg}.pt'
@@ -161,7 +161,7 @@ if __name__ == '__main__':
 
     video_model = helpers.parallel_model(video_model)
     if args.test:
-        acc, msg = test()
+        acc, msg = test(args.batch_size)
         print(f'acc={acc}')
         exit()
     train()

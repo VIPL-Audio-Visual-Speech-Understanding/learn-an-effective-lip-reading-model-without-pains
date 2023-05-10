@@ -24,13 +24,13 @@ def parse_arguments() -> argparse.Namespace:
         else:
             raise argparse.ArgumentTypeError('Unsupported value encountered.')
 
-    parser.add_argument('--gpus', type=str, required=True)
     parser.add_argument('--lr', type=float, required=True)
     parser.add_argument('--batch_size', type=int, required=True)
     parser.add_argument('--n_class', type=int, required=True)
-    parser.add_argument('--num_workers', type=int, required=True)
     parser.add_argument('--max_epoch', type=int, required=True)
     parser.add_argument('--test', type=str2bool, required=True)
+    parser.add_argument('--num_workers', type=int, required=False, default=1)
+    parser.add_argument('--gpus', type=str, required=False, default='0')
 
     # load opts
     parser.add_argument('--weights', type=str, required=False, default=None)
@@ -39,7 +39,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument('--save_prefix', type=str, required=True)
 
     # dataset
-    parser.add_argument('--dataset', type=str, required=True)
+    parser.add_argument('--dataset', type=str, required=False, default='lrw')
 
     args = parser.parse_args()
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpus
@@ -48,37 +48,37 @@ def parse_arguments() -> argparse.Namespace:
 
 
 @torch.no_grad()
-def test():
-    dataset = Dataset('val', args)
+def test(batch_size, num_workers=1):
+    dataset = Dataset('val')
     print('Start Testing, Data Length:', len(dataset))
-    loader = helpers.dataset2dataloader(dataset, args.batch_size, args.num_workers, shuffle=False)
+    loader = helpers.dataset2dataloader(dataset, batch_size, num_workers, shuffle=False)
 
     print('start testing')
-    v_acc = []
+    validation_accuracy = []
 
-    for i_iter, input in enumerate(loader):
+    for i_iter, tensor_input in enumerate(loader):
         video_model.eval()
 
         tic = time.time()
-        video = input['video'].cuda(non_blocking=True)
-        label = input['label'].cuda(non_blocking=True)
+        video = tensor_input['video'].cuda(non_blocking=True)
+        label = tensor_input['label'].cuda(non_blocking=True)
 
         with autocast():
             y_v = video_model(video)
 
-        v_acc.extend((y_v.argmax(-1) == label).cpu().numpy().tolist())
+        validation_accuracy.extend((y_v.argmax(-1) == label).cpu().numpy().tolist())
         toc = time.time()
 
         if i_iter % 10 == 0:
-            msg = helpers.add_msg('', 'v_acc={:.5f}', np.array(v_acc).mean())
+            msg = helpers.add_msg('', 'v_acc={:.5f}', np.array(validation_accuracy).mean())
             msg = helpers.add_msg(msg, 'eta={:.5f}', (toc - tic) * (len(loader) - i_iter) / 3600.0)
 
             print(msg)
 
-    acc = float(np.array(v_acc).mean())
-    msg = f'v_acc_{acc:.5f}_'
+    accuracy = float(np.array(validation_accuracy).mean())
+    accuracy_msg = f'v_acc_{accuracy:.5f}_'
 
-    return acc, msg
+    return accuracy, accuracy_msg
 
 
 def train():
@@ -105,9 +105,9 @@ def train():
             loss_fn = nn.CrossEntropyLoss()
 
             with autocast():
-                y_v = video_model(video)
+                predicted_label = video_model(video)
 
-                loss_bp = loss_fn(y_v, label)
+                loss_bp = loss_fn(predicted_label, label)
 
             loss['CE V'] = loss_bp
 
@@ -148,7 +148,7 @@ def train():
 
 if __name__ == '__main__':
     args = parse_arguments()
-    video_model = VideoModel(args).cuda()
+    video_model = VideoModel(args.n_class).cuda()
 
     lr = args.batch_size / 32.0 / torch.cuda.device_count() * args.lr
     optim_video = optim.Adam(video_model.parameters(), lr=lr, weight_decay=1e-4)

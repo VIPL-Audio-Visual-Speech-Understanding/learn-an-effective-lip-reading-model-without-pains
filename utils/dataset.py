@@ -15,14 +15,10 @@ def load_labels() -> List[str]:
 
 
 class LRWDataset(Dataset):
-    def __init__(self, phase: str, args):
+    def __init__(self, phase: str):
         self.labels = load_labels()
         self.list = []
         self.phase = phase
-        self.args = args
-
-        if not hasattr(self.args, 'is_aug'):
-            setattr(self.args, 'is_aug', True)
 
         for label in self.labels:
             label_dir = os.path.join('lrw_roi_npy_gray_pkl_jpeg', label, phase)

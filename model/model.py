@@ -7,16 +7,16 @@ from torch.cuda.amp import autocast, GradScaler
 
 class VideoModel(nn.Module):
 
-    def __init__(self, args, dropout=0.5):
+    def __init__(self, num_classes, dropout=0.5):
         super(VideoModel, self).__init__()
 
-        self.args = args
+        self.num_classes = num_classes
 
         self.video_cnn = VideoCNN()
         in_dim = 512
         self.gru = nn.GRU(in_dim, 1024, 3, batch_first=True, bidirectional=True, dropout=0.2)
 
-        self.v_cls = nn.Linear(1024 * 2, self.args.n_class)
+        self.v_cls = nn.Linear(1024 * 2, self.num_classes)
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, v):

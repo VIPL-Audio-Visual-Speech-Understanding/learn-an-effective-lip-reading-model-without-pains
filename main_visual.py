@@ -1,6 +1,5 @@
 import argparse
 import torch
-import torch.nn as nn
 import os
 import numpy as np
 import time
@@ -131,7 +130,7 @@ def train():
             tot_iter += 1
 
         train_losses.append(train_loss / len(loader))
-        helpers.plot_graphs(train_losses, epoch)
+        helpers.plot_train_loss(train_losses, epoch)
 
         scheduler.step()
 

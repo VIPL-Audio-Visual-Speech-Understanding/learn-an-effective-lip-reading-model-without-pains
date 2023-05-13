@@ -31,14 +31,9 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument('--test', type=str2bool, required=True)
     parser.add_argument('--num_workers', type=int, required=False, default=1)
     parser.add_argument('--gpus', type=str, required=False, default='0')
-
-    # load opts
     parser.add_argument('--weights', type=str, required=False, default=None)
-
-    # save prefix
     parser.add_argument('--save_prefix', type=str, required=True)
-
-    # dataset
+    parser.add_argument('--mixup', type=str2bool, required=False)
     parser.add_argument('--dataset', type=str, required=False, default='lrw')
 
     args = parser.parse_args()

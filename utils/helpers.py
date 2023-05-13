@@ -62,7 +62,7 @@ def prepare_data(sample):
 
 def plot_train_loss(train_losses, epoch):
     print_interval = 5
-    if epoch % 5 == 0:
+    if epoch % print_interval == 0:
         fig, ax = plt.subplots(figsize=(8, 6))
         ax.plot(train_losses, label='Training Loss')
         ax.set_xlabel('Epoch')

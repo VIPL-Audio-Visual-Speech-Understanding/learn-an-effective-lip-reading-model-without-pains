@@ -51,12 +51,11 @@ def test(batch_size, num_workers=1):
     print('start testing')
     validation_accuracy = []
 
-    for i_iter, tensor_input in enumerate(loader):
+    for i_iter, sample in enumerate(loader):
         video_model.eval()
 
         tic = time.time()
-        video = tensor_input['video'].cuda(non_blocking=True)
-        label = tensor_input['label'].cuda(non_blocking=True)
+        video, label = helpers.prepare_data(sample)
 
         with autocast():
             y_v = video_model(video)
@@ -93,33 +92,12 @@ def train():
             tic = time.time()
 
             video_model.train()
-            video = sample['video'].cuda(non_blocking=True)
-            label = sample['label'].cuda(non_blocking=True).long()
+            video, label = helpers.prepare_data(sample)
 
-            loss = {}
-
-            loss_fn = nn.CrossEntropyLoss()
-
-            with autocast():
-                if args.mixup:
-                    mixup_coef = np.random.beta(alpha, alpha)
-                    shuffled_indices = torch.randperm(video.size(0)).cuda(non_blocking=True)
-
-                    mixed_video = mixup_coef * video + (1 - mixup_coef) * video[shuffled_indices, :]
-                    mixed_label_a, mixed_label_b = label, label[shuffled_indices]
-
-                    predicted_label = video_model(mixed_video)
-
-                    loss_bp = mixup_coef * loss_fn(predicted_label, mixed_label_a) + (1 - mixup_coef) * loss_fn(
-                                                   predicted_label, mixed_label_b)
-                else:
-                    predicted_label = video_model(video)
-                    loss_bp = loss_fn(predicted_label, label)
-
-            loss['CE V'] = loss_bp
+            loss = helpers.calculate_loss(args.mixup, alpha, video_model, video, label)
 
             optim_video.zero_grad()
-            scaler.scale(loss_bp).backward()
+            scaler.scale(loss['CE V']).backward()
             scaler.step(optim_video)
             scaler.update()
 

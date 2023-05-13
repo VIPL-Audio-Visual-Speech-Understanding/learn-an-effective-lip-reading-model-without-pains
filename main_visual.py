@@ -85,9 +85,10 @@ def train():
     alpha = 0.2
     tot_iter = 0
     best_acc = 0.0
+    train_losses = []
     scaler = GradScaler()
     for epoch in range(max_epoch):
-
+        train_loss = 0.0
         for i_iteration, sample in enumerate(loader):
             tic = time.time()
 
@@ -101,6 +102,7 @@ def train():
             scaler.step(optim_video)
             scaler.update()
 
+            train_loss += loss['CE V'].item()
             toc = time.time()
 
             msg = f'epoch={epoch},train_iter={tot_iter},eta={(toc - tic) * (len(loader) - i_iteration) / 3600.0:.5f}'
@@ -127,6 +129,9 @@ def train():
                     best_acc = max(acc, best_acc)
 
             tot_iter += 1
+
+        train_losses.append(train_loss / len(loader))
+        helpers.plot_graphs(train_losses, epoch)
 
         scheduler.step()
 

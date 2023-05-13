@@ -3,6 +3,7 @@ from torch.utils.data import DataLoader
 import numpy as np
 from torch.cuda.amp import autocast
 import torch
+import matplotlib.pyplot as plt
 
 def parallel_model(model):
     return nn.DataParallel(model)
@@ -57,6 +58,17 @@ def prepare_data(sample):
     video = sample['video'].cuda(non_blocking=True)
     label = sample['label'].cuda(non_blocking=True).long()
     return video, label
+
+
+def plot_train_loss(train_losses, epoch):
+    if epoch % 10 == 0:
+        fig, ax = plt.subplots(figsize=(8, 6))
+        ax.plot(train_losses, label='Training Loss')
+        ax.set_xlabel('Epoch')
+        ax.set_ylabel('Loss')
+        ax.set_title('Training Loss vs. Epoch')
+        ax.legend()
+        plt.show()
 
 
 def add_msg(msg, k, v):

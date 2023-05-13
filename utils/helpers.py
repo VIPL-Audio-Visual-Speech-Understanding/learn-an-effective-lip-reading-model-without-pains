@@ -5,6 +5,7 @@ from torch.cuda.amp import autocast
 import torch
 import matplotlib.pyplot as plt
 
+
 def parallel_model(model):
     return nn.DataParallel(model)
 

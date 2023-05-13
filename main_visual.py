@@ -33,7 +33,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument('--gpus', type=str, required=False, default='0')
     parser.add_argument('--weights', type=str, required=False, default=None)
     parser.add_argument('--save_prefix', type=str, required=True)
-    parser.add_argument('--mixup', type=str2bool, required=False)
+    parser.add_argument('--mixup', type=str2bool, required=False, default=False)
     parser.add_argument('--dataset', type=str, required=False, default='lrw')
 
     args = parser.parse_args()

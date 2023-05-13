@@ -88,6 +88,7 @@ def train():
     loader = helpers.dataset2dataloader(dataset, args.batch_size, args.num_workers)
 
     max_epoch = args.max_epoch
+    alpha = 0.2
     tot_iter = 0
     best_acc = 0.0
     scaler = GradScaler()
@@ -105,9 +106,20 @@ def train():
             loss_fn = nn.CrossEntropyLoss()
 
             with autocast():
-                predicted_label = video_model(video)
+                if args.mixup:
+                    mixup_coef = np.random.beta(alpha, alpha)
+                    shuffled_indices = torch.randperm(video.size(0)).cuda(non_blocking=True)
 
-                loss_bp = loss_fn(predicted_label, label)
+                    mixed_video = mixup_coef * video + (1 - mixup_coef) * video[shuffled_indices, :]
+                    mixed_label_a, mixed_label_b = label, label[shuffled_indices]
+
+                    predicted_label = video_model(mixed_video)
+
+                    loss_bp = mixup_coef * loss_fn(predicted_label, mixed_label_a) + (1 - mixup_coef) * loss_fn(
+                                                   predicted_label, mixed_label_b)
+                else:
+                    predicted_label = video_model(video)
+                    loss_bp = loss_fn(predicted_label, label)
 
             loss['CE V'] = loss_bp
 

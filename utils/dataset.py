@@ -21,7 +21,7 @@ class LRWDataset(Dataset):
         self.phase = phase
 
         for label in self.labels:
-            label_dir = os.path.join('lrw_roi_npy_gray_pkl_jpeg', label, phase)
+            label_dir = os.path.join('/tf/rois/lrw_roi_npy_gray_pkl_jpeg', label, phase)
             files = [os.path.join(label_dir, f) for f in os.listdir(label_dir) if f.endswith('.pkl')]
             files.sort()
             self.list.extend(files)

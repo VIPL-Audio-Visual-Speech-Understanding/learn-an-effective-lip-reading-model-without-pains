@@ -6,7 +6,7 @@ import time
 from model import VideoModel
 import torch.optim as optim
 from torch.cuda.amp import autocast, GradScaler
-from utils import LRWDataset as Dataset
+from utils.dataset import LRWDataset as Dataset
 from utils import helpers
 from model.lrw_dataset import LRWDataset
 

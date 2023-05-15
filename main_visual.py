@@ -6,7 +6,6 @@ import time
 from model import VideoModel
 import torch.optim as optim
 from torch.cuda.amp import autocast, GradScaler
-from utils.dataset import LRWDataset as Dataset
 from utils import helpers
 from model.lrw_dataset import LRWDataset
 
@@ -45,7 +44,7 @@ def parse_arguments() -> argparse.Namespace:
 @torch.no_grad()
 def test(batch_size, num_workers=1):
     dataset = LRWDataset("val", dataset_prefix="")
-    print('Start Testing, Data Length:', len(dataset))
+    print(f"Dataset object of Validation set: {dataset}, len is: {len(dataset)}")
     loader = helpers.dataset2dataloader(dataset, batch_size, num_workers, shuffle=False)
 
     print('start testing')
@@ -77,7 +76,7 @@ def test(batch_size, num_workers=1):
 
 def train():
     dataset = LRWDataset("train", dataset_prefix="")
-    print(f"Start Training, Data Length: {len(dataset)}")
+    print(f"Dataset object of training set: {dataset}, len is: {len(dataset)}")
 
     loader = helpers.dataset2dataloader(dataset, args.batch_size, args.num_workers)
 

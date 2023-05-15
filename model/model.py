@@ -22,20 +22,30 @@ class Singleton(type):
 
 
 class VideoModel(nn.Module, metaclass=Singleton):
+    """
+    The VideoModel class is a PyTorch nn.Module that consists of a video CNN and a GRU network.
+    The VideoModel class takes as input a batch of videos,
+    and outputs a tensor of shape (batch_size, n_class) containing the logits for each video in the batch.
+    """
 
-    def __init__(self, num_classes, dropout=0.5):
+    def __init__(self, num_classes: int, dropout: float = 0.5, training: bool = False) -> None:
         super(VideoModel, self).__init__()
 
         self.num_classes = num_classes
-
         self.video_cnn = VideoCNN()
         in_dim = 512
         self.gru = nn.GRU(in_dim, 1024, 3, batch_first=True, bidirectional=True, dropout=0.2)
-
         self.v_cls = nn.Linear(1024 * 2, self.num_classes)
         self.dropout = nn.Dropout(p=dropout)
 
-    def forward(self, v):
+    def forward(self, v: torch.Size) -> torch.Size:
+        """
+        The output of the CNN is fed into a bidirectional GRU network with 1024 hidden units per direction, and 3 layers.
+        The GRU network outputs a tensor of shape (batch_size, seq_len, 2048).
+        The output of the GRU network is then fed into a linear layer with n_class output units,
+         which produces a tensor of shape (batch_size, n_class) containing the logits for each video in the batch.
+        """
+
         self.gru.flatten_parameters()
 
         if self.training:

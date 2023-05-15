@@ -1,5 +1,6 @@
 # coding: utf-8
 import math
+import torch
 import torch.nn as nn
 
 
@@ -13,9 +14,14 @@ def conv1x1(in_planes, out_planes):
 
 
 class BasicBlock(nn.Module):
+    """
+    TODO add documentation
+    """
+
     expansion = 1
 
-    def __init__(self, inplanes, planes, stride=1, downsample=None, se=False):
+    def __init__(self, inplanes: int, planes: int, stride: int = 1, downsample: nn.modules.container.Sequential = None,
+                 se: bool = False) -> None:
         super(BasicBlock, self).__init__()
         self.conv1 = conv3x3(inplanes, planes, stride)
         self.bn1 = nn.BatchNorm2d(planes)
@@ -31,7 +37,7 @@ class BasicBlock(nn.Module):
         #     self.conv3 = conv1x1(planes, planes // 16)
         #     self.conv4 = conv1x1(planes // 16, planes)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         residual = x
         out = self.conv1(x)
         out = self.bn1(out)
@@ -57,8 +63,11 @@ class BasicBlock(nn.Module):
 
 
 class ResNet(nn.Module):
+    """
+    TODO add documentation
+    """
 
-    def __init__(self, block, layers, se=False):
+    def __init__(self, block: nn.Module, layers: [], se: bool = False) -> None:
         self.inplanes = 64
         super(ResNet, self).__init__()
         self.se = se
@@ -70,6 +79,7 @@ class ResNet(nn.Module):
         self.avgpool = nn.AdaptiveAvgPool2d(1)
 
         self.bn = nn.BatchNorm1d(512)
+
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
@@ -81,8 +91,9 @@ class ResNet(nn.Module):
                 m.weight.data.fill_(1)
                 m.bias.data.zero_()
 
-    def _make_layer(self, block, planes, blocks, stride=1):
+    def _make_layer(self, block: nn.Module, planes: int, blocks: int, stride: int = 1) -> nn.Sequential:
         downsample = None
+
         if stride != 1 or self.inplanes != planes * block.expansion:
             downsample = nn.Sequential(
                 nn.Conv2d(self.inplanes, planes * block.expansion,
@@ -90,15 +101,15 @@ class ResNet(nn.Module):
                 nn.BatchNorm2d(planes * block.expansion),
             )
 
-        layers = []
-        layers.append(block(self.inplanes, planes, stride, downsample, se=self.se))
+        layers = [block(self.inplanes, planes, stride, downsample, se=self.se)]
         self.inplanes = planes * block.expansion
+
         for i in range(1, blocks):
             layers.append(block(self.inplanes, planes, se=self.se))
 
         return nn.Sequential(*layers)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
@@ -106,11 +117,18 @@ class ResNet(nn.Module):
         x = self.avgpool(x)
         x = x.view(x.size(0), -1)
         x = self.bn(x)
+
         return x
 
 
 class VideoCNN(nn.Module):
-    def __init__(self, se=False):
+    """
+    The VideoCNN is used to encode each frame of the input video into a feature vector of length 512.
+     The output of the CNN is a tensor of shape (batch_size, seq_len, 512),
+     where seq_len is the length of the video sequence (i.e. the number of frames in each video).
+    """
+
+    def __init__(self, se: bool = False) -> None:
         super(VideoCNN, self).__init__()
 
         # frontend3D
@@ -128,27 +146,26 @@ class VideoCNN(nn.Module):
         # initialize
         self._initialize_weights()
 
-    def visual_frontend_forward(self, x):
+    def visual_frontend_forward(self, x: torch.Tensor) -> torch.Tensor:
         x = x.transpose(1, 2)
         x = self.frontend3D(x)
         x = x.transpose(1, 2)
         x = x.contiguous()
         x = x.view(-1, 64, x.size(3), x.size(4))
         x = self.resnet18(x)
+
         return x
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         b, t = x.size()[:2]
-
         x = self.visual_frontend_forward(x)
-
         # x = self.dropout(x)
         feat = x.view(b, -1, 512)
-
         x = x.view(b, -1, 512)
+
         return x
 
-    def _initialize_weights(self):
+    def _initialize_weights(self) -> None:
         for m in self.modules():
             if isinstance(m, nn.Conv3d):
                 n = m.kernel_size[0] * m.kernel_size[1] * m.kernel_size[2] * m.out_channels

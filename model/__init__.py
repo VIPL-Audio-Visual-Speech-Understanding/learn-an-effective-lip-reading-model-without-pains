@@ -1,1 +1,1 @@
-from .video_model import *
+from .model import *

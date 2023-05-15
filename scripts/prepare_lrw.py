@@ -51,6 +51,7 @@ def extract_opencv(file_name: str) -> list:
     :param file_name: path to video file
     :return: ROI of given video file
     """
+
     video = []
     cap = cv2.VideoCapture(file_name)
 

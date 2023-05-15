@@ -77,11 +77,15 @@ def test(batch_size, num_workers=1):
 
 def train():
     dataset = LRWDataset("train", dataset_prefix="/tf/rois/")
-    print('Start Training, Data Length:', len(dataset))
-    old_dataset = Dataset('train')
-    print('Start Training, Old Data Length:', len(old_dataset))
+    print('Start Training, New Data Length:', len(dataset))
+    print(f"New data list len {len(dataset.list)}")
+    print(f"New data list first element {dataset.list[1]}")
+
     dataset = Dataset('train')
-    
+    print('Start Training, Old Data Length:', len(dataset))
+    print(f"Old data list len {len(dataset.list)}")
+    print(f"Old data list first element {dataset.list[1]}")
+
     loader = helpers.dataset2dataloader(dataset, args.batch_size, args.num_workers)
 
     max_epoch = args.max_epoch

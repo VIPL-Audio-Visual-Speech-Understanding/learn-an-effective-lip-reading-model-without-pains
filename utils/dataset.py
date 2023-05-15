@@ -27,8 +27,8 @@ class LRWDataset(Dataset):
             self.list.extend(files)
 
     def __getitem__(self, idx):
-        tensor = torch.load(self.list[idx])
 
+        tensor = torch.load(self.list[idx])
         inputs = tensor.get('video')
         inputs = [jpeg.decode(img, pixel_format=TJPF_GRAY) for img in inputs]
         inputs = np.stack(inputs, 0) / 255.0

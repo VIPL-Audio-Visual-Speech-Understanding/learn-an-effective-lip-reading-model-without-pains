@@ -8,6 +8,7 @@ import torch.optim as optim
 from torch.cuda.amp import autocast, GradScaler
 from utils import LRWDataset as Dataset
 from utils import helpers
+from model.lrw_dataset import LRWDataset
 
 torch.backends.cudnn.benchmark = True
 
@@ -75,8 +76,10 @@ def test(batch_size, num_workers=1):
 
 
 def train():
-    dataset = Dataset('train')
+    dataset = LRWDataset("train", dataset_prefix="/tf/rois/")
+    old_dataset = Dataset('train')
     print('Start Training, Data Length:', len(dataset))
+    print('Start Training, Old Data Length:', len(old_dataset))
 
     loader = helpers.dataset2dataloader(dataset, args.batch_size, args.num_workers)
 

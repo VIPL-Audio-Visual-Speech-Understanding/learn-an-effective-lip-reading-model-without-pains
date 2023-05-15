@@ -45,9 +45,7 @@ def parse_arguments() -> argparse.Namespace:
 @torch.no_grad()
 def test(batch_size, num_workers=1):
     dataset = LRWDataset("val", dataset_prefix="")
-    print('Start Testing, New Data Length:', len(dataset))
-    dataset = Dataset('val')
-    print('Start Testing, Old Data Length:', len(dataset))
+    print('Start Testing, Data Length:', len(dataset))
     loader = helpers.dataset2dataloader(dataset, batch_size, num_workers, shuffle=False)
 
     print('start testing')
@@ -79,9 +77,7 @@ def test(batch_size, num_workers=1):
 
 def train():
     dataset = LRWDataset("train", dataset_prefix="")
-    print('Start Training, New Data Length:', len(dataset))
-    print(f"New data list len {len(dataset.list)}")
-    print(f"New data list first element {dataset.list[1]}")
+    print(f"Start Training, Data Length: {len(dataset)}")
 
     loader = helpers.dataset2dataloader(dataset, args.batch_size, args.num_workers)
 

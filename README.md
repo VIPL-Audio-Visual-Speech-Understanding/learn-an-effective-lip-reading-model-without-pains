@@ -1,9 +1,5 @@
 # Learn an Effective Lip Reading Model without Pains
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/learn-an-effective-lip-reading-model-without/lipreading-on-lrw-1000)](https://paperswithcode.com/sota/lipreading-on-lrw-1000?p=learn-an-effective-lip-reading-model-without)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/learn-an-effective-lip-reading-model-without/lipreading-on-lip-reading-in-the-wild)](https://paperswithcode.com/sota/lipreading-on-lip-reading-in-the-wild?p=learn-an-effective-lip-reading-model-without)
-
-
 ## Content
 
 - [Introduction](#Introduction)
@@ -19,11 +15,11 @@
 
 ## Introduction
 
-This is the repository of [An Efficient Software for Building Lip Reading Models Without Pains](https://vipl.ict.ac.cn/uploadfile/upload/2021070711474245.pdf). In this repository, we provide a deep lip reading pipeline as well as pre-trained models and training settings. We evaluate our pipeline on [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14). We obtain **88.4%** and **56.0%** on LRW and LRW-1000, respectively. The results are comparable and even surpass current state-of-the-art results. **Especially, we reach the current state-of-the-art result (56.0%) on LRW-1000 Dataset.**
+This is the repository of [An Efficient Software for Building Lip Reading Models Without Pains](https://vipl.ict.ac.cn/research/speech/hylw/202205/W020220524805772198802.pdf). In this repository, we provide a deep lip reading pipeline as well as pre-trained models and training settings. We evaluate our pipeline on [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [CAS-VSR-W1k Dataset](https://vipl.ict.ac.cn/resources/databases/201810/t20181017_32714.html). We obtain **88.4%** and **56.0%** on LRW and CAS-VSR-W1k, respectively. The results are comparable and even surpass current state-of-the-art results. **In particular, we reach the current state-of-the-art result (56.0%) on the CAS-VSR-W1k Dataset.**
 
 ## Benchmark
 
-| Year |      Method          |   LRW  |     LRW-1000    |
+| Year |      Method          |   LRW  |     CAS-VSR-W1k    |
 |:----:|:--------------------:|:------:|:---------------:|
 |2017|[Chung et al.](https://www.robots.ox.ac.uk/~vgg/publications/2017/Chung17a/chung17a.pdf)   | 61.1%  | 25.7% |
 |2017|[Stafylakis et al.](https://arxiv.org/abs/1703.04105)   |83.5% | 38.2% |
@@ -44,7 +40,7 @@ This is the repository of [An Efficient Software for Building Lip Reading Models
 
 ## Dataset Preparation
 
-1. Download [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.htm) and [LRW1000 Dataset](https://vipl.ict.ac.cn/view_database.php?id=14) and link `lrw_mp4` and `LRW1000_Public` in the root of this repository:
+1. Download [LRW Dataset](http://www.robots.ox.ac.uk/~vgg/data/lip_reading/lrw1.html) and [CAS-VSR-W1k Dataset](https://vipl.ict.ac.cn/resources/databases/201810/t20181017_32714.html) and link `lrw_mp4` and `LRW1000_Public` in the root of this repository:
 
 ```
 ln -s PATH_TO_DATA/lrw_mp4 .
@@ -62,7 +58,7 @@ The mouth videos, labels, and word boundary information will be saved in the `.p
 
 ## Pretrain Weights
 
-We provide pretrained weight on LRW/LRW-1000 dataset for evaluation. For smaller datasets, the pretrained weights can be provide a good start point for feature extraction, finetuning, and so on.
+We provide pretrained weight on LRW/CAS-VSR-W1k dataset for evaluation. For smaller datasets, the pretrained weights can be provide a good start point for feature extraction, finetuning, and so on.
 
 Link of pretrained weights: [Baidu Yun](https://pan.baidu.com/s/1FuOKEX_ZI7QgobQmZdmq8A) (code: ivgl)
 
@@ -70,9 +66,9 @@ If you can not access to provided links, please email dalu.feng@vipl.ict.ac.cn o
 
 ## How to test
 
-To test our provided weights, you should download weights and place them in the root of this repository. 
+To test our provided weights, you should download the weights and place them in the root of this repository. 
 
-For example, to test baseline on LRW Dataset: 
+For example, to test the baseline on the LRW Dataset: 
 
 ```
 python main_visual.py \
@@ -92,7 +88,7 @@ python main_visual.py \
     --weights='checkpoints/lrw-cosine-lr-acc-0.85080.pt'
 ```
 
-To test our model in LRW-1000 Dataset: 
+To test our model on the CAS-VSR-W1k Dataset: 
 
 ```
 python main_visual.py \
@@ -183,3 +179,4 @@ If you find this code useful in your research, please consider to cite the follo
 ## License
 
 The MIT License
+
